@@ -6,6 +6,11 @@ Le tiers de confiance de l'argent de la diaspora. Un compte séquestre couplé �
 système de preuve d'exécution, qui permet de financer un chantier au Cameroun
 depuis la France sans jamais payer avant que le travail soit prouvé fait.
 
+**En ligne : [nodjal.onrender.com](https://nodjal.onrender.com)**
+(plan gratuit Render — le service se met en veille après inactivité ; la
+première requête après une pause peut prendre jusqu'à 50 secondes à répondre.
+Le jeu de démonstration est reseedé automatiquement à chaque redémarrage.)
+
 ---
 
 ## Démarrage — trente secondes, zéro installation

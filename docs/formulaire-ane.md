@@ -71,10 +71,19 @@ Technologie
 ### Lien vers site web ou réseaux sociaux
 
 **Champ obligatoire, bloquant.** Un dossier sans lien vivant part dans la pile du
-bas, quelle que soit la qualité du reste. Il vous faut avant de soumettre :
+bas, quelle que soit la qualité du reste.
 
-- la page publique — problème, solution, modèle de menace, formulaire d'inscription ;
-- une page LinkedIn d'entreprise.
+```
+https://nodjal.onrender.com
+```
+
+Page publique en ligne (problème, solution, modèle de menace, formulaire
+d'inscription). Reste à faire : une page LinkedIn d'entreprise.
+
+> Plan gratuit Render : le service se met en veille après inactivité, la
+> première requête peut prendre jusqu'à 50 secondes. Si vous faites une
+> démonstration en direct devant le jury, ouvrez le lien quelques minutes
+> avant pour le réveiller.
 
 ### Description de l'activité
 
@@ -300,8 +309,8 @@ détail est dans `docs/pitch-5-minutes.md`. Si le dépôt échoue :
    (services financiers) et 42 (logiciel), plus le nom de domaine. Aucune société
    ne semble porter ce nom aujourd'hui ; voisins phonétiques existants dans la
    tech mais hors secteur : Nodal, Noda, Nodo, Nodd.
-3. **Publier la page publique et la page LinkedIn.** Le champ « lien » est
-   obligatoire.
+3. **Page publique en ligne** : https://nodjal.onrender.com — fait. Reste la
+   page LinkedIn d'entreprise.
 4. **Bloquer les 18-19 septembre** pour Ensemble Back Home, à Paris. Vous y
    trouverez vos premiers clients, potentiellement une lettre d'intention, et
    surtout une phrase que peu de candidats pourront dire au jury.

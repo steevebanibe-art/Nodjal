@@ -21,7 +21,20 @@ node tools/demo.js --attaques    # démo complète en terminal
 node server/server.js            # les trois interfaces en local
 ```
 
-## Dernière tâche en cours — NON TERMINÉE
+## Dernière tâche — TERMINÉE
+
+**L'app est en ligne : https://nodjal.onrender.com** (dépôt GitHub
+`steevebanibe-art/Nodjal`, déployé via Render Blueprint / `render.yaml`, plan
+gratuit). Vérifié depuis le navigateur, la page publique répond correctement.
+`README.md` et `docs/formulaire-ane.md` sont à jour avec l'URL.
+
+À savoir pour la suite : plan gratuit Render → le service se met en veille
+après inactivité, ~50 secondes de délai sur la première requête après une
+pause, et le disque n'est pas persistant (reseed automatique à chaque
+redémarrage via `server/seed.js`). Avant une démo en direct devant le jury,
+ouvrir le lien quelques minutes à l'avance pour le réveiller.
+
+## Ancienne tâche (historique) — comment on y est arrivé
 
 L'utilisateur a demandé si l'app était en ligne. Réponse : non, elle tournait en
 `127.0.0.1` uniquement (invisible depuis l'extérieur, y compris son propre
@@ -63,13 +76,11 @@ peut guider pas à pas :**
 3. Lancer le déploiement. Noter l'URL `https://nodjal-xxxx.onrender.com`
    attribuée par Render (ou un domaine personnalisé si l'utilisateur en met un
    dans les réglages du service).
-4. **Rappel stockage** (à redire avant que l'utilisateur ne s'étonne) : sur le
-   plan free de Render, le disque n'est pas persistant entre redéploiements —
-   chaque redémarrage reseed le jeu de démo de base via `semer()`, mais perd
-   les scénarios d'attaque joués en direct. Comportement voulu, pas un bug.
-5. Domaine / URL finale à coller dans le formulaire ANE et dans
-   `docs/formulaire-ane.md` (champ « lien vers site web »).
-6. Mettre à jour `README.md` avec l'URL en ligne une fois confirmée.
+4. Rappel stockage, redéploiements sans état persistant.
+5. Coller l'URL finale dans le formulaire ANE et `docs/formulaire-ane.md`.
+6. Mettre à jour `README.md` avec l'URL en ligne.
+
+Tout ça est fait — voir la section « Dernière tâche — TERMINÉE » plus haut.
 
 ## Autres points en attente (non bloquants, notés dans README.md)
 
@@ -100,6 +111,6 @@ peut guider pas à pas :**
 
 **Message à envoyer dans la nouvelle conversation :**
 
-> Reprends le projet Nodjal. Lis `docs/REPRISE.md` pour le contexte, puis
-> termine le déploiement en ligne du serveur (section « dernière tâche en
-> cours »).
+> Reprends le projet Nodjal. Lis `docs/REPRISE.md` pour le contexte. Le
+> déploiement en ligne est fait (https://nodjal.onrender.com) ; occupe-toi
+> ensuite d'un des points de la section « Autres points en attente ».
