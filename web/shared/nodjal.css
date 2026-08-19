@@ -1,0 +1,605 @@
+/* ============================================================================
+   NODJAL — système visuel
+   ----------------------------------------------------------------------------
+   Parti pris : le registre notarial. Ce produit n'est pas un tableau de bord,
+   c'est un acte. Papier chaud, filets réglés, serif documentaire, sceau à
+   l'encre sèche. La marque tient dans une phrase du dossier : « la différence
+   entre un promoteur et un notaire ».
+
+   Aucune ressource distante. Les polices sont des piles système choisies pour
+   leur caractère documentaire — Palatino, Sitka, Charter — jamais les grotesques
+   par défaut. Le grain et les filets sont produits en CSS et en SVG inline.
+   ========================================================================== */
+
+:root {
+  /* --- Encres */
+  --encre:        #1A1814;
+  --encre-douce:  #3C3831;
+  --encre-pale:   #6B6459;
+  --discret:      #8B8375;
+
+  /* --- Papiers */
+  --papier:       #F6F3EC;
+  --papier-vif:   #FBF9F4;
+  --papier-creux: #EFEBE1;
+  --filet:        #DCD6C8;
+  --filet-fin:    #E8E3D7;
+
+  /* --- Mentions */
+  --foret:        #2F6B4F;
+  --foret-clair:  #E8F0EA;
+  --ocre:         #9A6B1E;
+  --ocre-clair:   #FAF2E2;
+  --terre:        #A33B2A;
+  --terre-clair:  #FBEDE9;
+  --nuit:         #14120F;
+
+  /* --- Typographie */
+  --display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', 'URW Palladio L', Georgia, serif;
+  --texte:   'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, 'Palatino Linotype', Georgia, serif;
+  --machine: 'Iosevka', 'JetBrains Mono', 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* --- Mesures */
+  --gouttiere: clamp(1.25rem, 4vw, 3rem);
+  --colonne: min(76rem, 100% - var(--gouttiere) * 2);
+  --rayon: 3px;
+  --transition: 180ms cubic-bezier(.22,.61,.36,1);
+
+  /* --- Grain : turbulence SVG, très basse opacité. Donne au papier son corps. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)' opacity='.42'/%3E%3C/svg%3E");
+}
+
+/* Lecture de nuit : le registre change de lumière, pas de nature. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="clair"]) {
+    --encre:        #EDE7DA;
+    --encre-douce:  #CFC7B6;
+    --encre-pale:   #9C9382;
+    --discret:      #7B7365;
+    --papier:       #16140F;
+    --papier-vif:   #1D1B15;
+    --papier-creux: #22201A;
+    --filet:        #322E25;
+    --filet-fin:    #26231C;
+    --foret:        #6FB58C;
+    --foret-clair:  #16241C;
+    --ocre:         #D9A34E;
+    --ocre-clair:   #2A2114;
+    --terre:        #E08167;
+    --terre-clair:  #2B1913;
+    --nuit:         #0C0B09;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--encre);
+  font: 400 clamp(1rem, .96rem + .18vw, 1.075rem)/1.62 var(--texte);
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+  text-rendering: optimizeLegibility;
+  position: relative;
+}
+
+/* Le grain vit au-dessus de tout, sans jamais intercepter la souris. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: .028;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="clair"]) body::after { mix-blend-mode: screen; opacity: .04; }
+}
+
+/* --------------------------------------------------------------- structure */
+
+.colonne { width: var(--colonne); margin-inline: auto; }
+.pile > * + * { margin-top: var(--ecart, 1rem); }
+
+/* Papier réglé : le fond des registres. Filets horizontaux très pâles. */
+.regle {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    var(--filet-fin) 31px,
+    var(--filet-fin) 32px
+  );
+}
+
+/* ------------------------------------------------------------ typographie */
+
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -.014em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.35rem, 1.5rem + 4.2vw, 4.6rem); }
+h2 { font-size: clamp(1.65rem, 1.2rem + 1.9vw, 2.55rem); }
+h3 { font-size: clamp(1.16rem, 1.02rem + .55vw, 1.42rem); }
+
+p { margin: 0; text-wrap: pretty; max-width: 62ch; }
+
+/* Le chapeau : petites capitales espacées, comme un intitulé d'acte. */
+.chapeau {
+  font-family: var(--machine);
+  font-size: .68rem;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  color: var(--discret);
+  margin: 0 0 .85rem;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.chapeau::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--filet);
+}
+.chapeau--seul::after { display: none; }
+
+.exergue {
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 1rem + .7vw, 1.5rem);
+  font-style: italic;
+  line-height: 1.42;
+  color: var(--encre-douce);
+  max-width: 46ch;
+}
+
+.mention { font-size: .82rem; color: var(--encre-pale); line-height: 1.55; }
+.machine { font-family: var(--machine); font-size: .8em; letter-spacing: -.01em; }
+.serif   { font-family: var(--display); }
+
+/* Le chiffre éditorial : un nombre posé grand, son unité en petit. */
+.chiffre {
+  font-family: var(--display);
+  font-size: clamp(3rem, 1.6rem + 6.2vw, 6.5rem);
+  line-height: .92;
+  letter-spacing: -.035em;
+  font-variant-numeric: lining-nums;
+  display: block;
+}
+.chiffre small {
+  display: block;
+  font-family: var(--machine);
+  font-size: .7rem;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  color: var(--discret);
+  margin-top: .7rem;
+  line-height: 1.5;
+}
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .22em; }
+a:hover { text-decoration-color: var(--foret); }
+:focus-visible { outline: 2px solid var(--foret); outline-offset: 3px; border-radius: 2px; }
+
+/* ------------------------------------------------------------------ sceau */
+
+/* Le tampon sec. Légèrement de travers, comme apposé à la main. */
+.sceau {
+  display: inline-flex;
+  flex-direction: column;
+  gap: .3rem;
+  padding: .7rem 1.05rem;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  font-family: var(--machine);
+  font-size: .64rem;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  transform: rotate(-2.1deg);
+  position: relative;
+  color: var(--foret);
+  background: color-mix(in srgb, var(--papier) 88%, transparent);
+}
+.sceau::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  opacity: .38;
+}
+.sceau strong { font-size: .82rem; letter-spacing: .13em; font-weight: 600; }
+.sceau--ocre  { color: var(--ocre); }
+.sceau--terre { color: var(--terre); }
+
+/* ----------------------------------------------------------------- mention */
+
+.pastille {
+  display: inline-flex;
+  align-items: center;
+  gap: .42rem;
+  padding: .24rem .62rem;
+  border-radius: 100px;
+  border: 1px solid var(--filet);
+  background: var(--papier-vif);
+  font-family: var(--machine);
+  font-size: .67rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--encre-pale);
+  white-space: nowrap;
+}
+.pastille::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.pastille--ok      { color: var(--foret); border-color: color-mix(in srgb, var(--foret) 34%, var(--filet)); background: var(--foret-clair); }
+.pastille--instruire { color: var(--ocre); border-color: color-mix(in srgb, var(--ocre) 34%, var(--filet)); background: var(--ocre-clair); }
+.pastille--rejet   { color: var(--terre); border-color: color-mix(in srgb, var(--terre) 34%, var(--filet)); background: var(--terre-clair); }
+.pastille--eteinte { opacity: .62; }
+.pastille--eteinte::before { background: none; box-shadow: inset 0 0 0 1px currentColor; }
+
+/* ---------------------------------------------------------------- boutons */
+
+.bouton {
+  --fond: var(--encre);
+  --texte-bouton: var(--papier-vif);
+  appearance: none;
+  border: 1px solid var(--fond);
+  background: var(--fond);
+  color: var(--texte-bouton);
+  font-family: var(--machine);
+  font-size: .74rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  padding: .78rem 1.35rem;
+  border-radius: var(--rayon);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  text-decoration: none;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--encre) 22%, transparent);
+}
+.bouton:hover:not(:disabled) { transform: translateY(-1.5px); box-shadow: 0 4px 12px -4px color-mix(in srgb, var(--encre) 45%, transparent); }
+.bouton:active:not(:disabled) { transform: translateY(0); }
+.bouton:disabled { opacity: .38; cursor: not-allowed; }
+.bouton--foret { --fond: var(--foret); }
+.bouton--creux {
+  --fond: transparent;
+  --texte-bouton: var(--encre);
+  border-color: var(--filet);
+  box-shadow: none;
+  background: var(--papier-vif);
+}
+.bouton--creux:hover:not(:disabled) { border-color: var(--encre-pale); }
+.bouton--menu {
+  --fond: transparent;
+  --texte-bouton: var(--encre-douce);
+  border-color: var(--filet);
+  box-shadow: none;
+  background: var(--papier-vif);
+  padding: .58rem .82rem;
+  font-size: .68rem;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+.bouton--menu:hover:not(:disabled) { border-color: var(--terre); color: var(--terre); }
+
+/* ----------------------------------------------------------------- cartes */
+
+.carte {
+  background: var(--papier-vif);
+  border: 1px solid var(--filet);
+  border-radius: var(--rayon);
+  padding: clamp(1.1rem, 2.4vw, 1.7rem);
+}
+.carte--creuse { background: var(--papier-creux); }
+.carte--encre  { background: var(--nuit); color: var(--papier); border-color: transparent; }
+.carte--encre .mention { color: color-mix(in srgb, var(--papier) 62%, transparent); }
+
+/* Verdict : le bloc qui porte la décision. Filet épais à gauche, comme un
+   trait de marge tracé par un contrôleur. */
+.verdict {
+  border-left: 4px solid var(--foret);
+  background: var(--foret-clair);
+  padding: 1.15rem 1.3rem;
+  border-radius: 0 var(--rayon) var(--rayon) 0;
+}
+.verdict--instruire { border-left-color: var(--ocre);  background: var(--ocre-clair); }
+.verdict--rejet     { border-left-color: var(--terre); background: var(--terre-clair); }
+.verdict h3 { font-family: var(--machine); font-size: .82rem; letter-spacing: .16em; text-transform: uppercase; color: var(--foret); }
+.verdict--instruire h3 { color: var(--ocre); }
+.verdict--rejet h3     { color: var(--terre); }
+
+/* --------------------------------------------------------------- registre */
+
+/* Le registre : filet vertical, numéros en gouttière. La colonne vertébrale
+   de la console. */
+.registre { list-style: none; margin: 0; padding: 0; position: relative; }
+.registre::before {
+  content: '';
+  position: absolute;
+  left: 15px; top: 12px; bottom: 12px;
+  width: 1px;
+  background: var(--filet);
+}
+.entree {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 1rem;
+  padding: .85rem 0;
+  position: relative;
+  align-items: start;
+}
+.entree + .entree { border-top: 1px solid var(--filet-fin); }
+.entree__numero {
+  font-family: var(--machine);
+  font-size: .72rem;
+  width: 31px; height: 31px;
+  border-radius: 50%;
+  border: 1px solid var(--filet);
+  background: var(--papier);
+  display: grid;
+  place-items: center;
+  color: var(--encre-pale);
+  position: relative;
+  z-index: 1;
+}
+.entree--paye  .entree__numero { background: var(--foret); border-color: var(--foret); color: var(--papier-vif); }
+.entree--cours .entree__numero { border-color: var(--encre); color: var(--encre); border-width: 2px; }
+.entree__titre { font-family: var(--display); font-size: 1.06rem; line-height: 1.3; }
+.entree__meta { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin-top: .38rem; align-items: center; }
+
+/* --------------------------------------------------------------- planches */
+
+/* Les preuves sont présentées comme des planches d'archive : image, filet,
+   légende technique dessous. */
+.planches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr));
+  gap: 1rem;
+}
+.planche {
+  border: 1px solid var(--filet);
+  background: var(--papier-vif);
+  border-radius: var(--rayon);
+  overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.planche:hover { border-color: var(--encre-pale); transform: translateY(-2px); }
+.planche img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--papier-creux);
+  border-bottom: 1px solid var(--filet);
+}
+.planche__vide {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  background: var(--papier-creux);
+  border-bottom: 1px solid var(--filet);
+  font-family: var(--machine);
+  font-size: .66rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--discret);
+}
+.planche__legende { padding: .7rem .8rem .8rem; }
+.planche__legende dt {
+  font-family: var(--machine);
+  font-size: .6rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--discret);
+}
+.planche__legende dd { margin: .12rem 0 .5rem; font-size: .82rem; line-height: 1.4; }
+.planche__legende dd:last-child { margin-bottom: 0; }
+
+/* --------------------------------------------------------------- signaux */
+
+.signal {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .85rem;
+  padding: .78rem 0;
+  border-top: 1px solid var(--filet-fin);
+  align-items: start;
+  animation: pose .42s both cubic-bezier(.22,.61,.36,1);
+}
+.signal:first-child { border-top: none; }
+.signal__marque {
+  font-family: var(--machine);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  padding: .22rem .42rem;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+  color: var(--encre-pale);
+  white-space: nowrap;
+  margin-top: .1rem;
+}
+.signal--attention .signal__marque { color: var(--ocre); background: var(--ocre-clair); }
+.signal--alerte .signal__marque,
+.signal--blocage .signal__marque { color: var(--terre); background: var(--terre-clair); }
+.signal--info .signal__marque { color: var(--foret); background: var(--foret-clair); }
+.signal__titre { font-weight: 600; font-size: .92rem; line-height: 1.35; }
+.signal__detail { font-size: .84rem; color: var(--encre-douce); margin-top: .2rem; line-height: 1.5; }
+
+@keyframes pose {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Révélation orchestrée au chargement : un seul mouvement, décalé. */
+.pose { animation: pose .62s both cubic-bezier(.22,.61,.36,1); }
+.pose-1 { animation-delay: .05s; }
+.pose-2 { animation-delay: .13s; }
+.pose-3 { animation-delay: .21s; }
+.pose-4 { animation-delay: .29s; }
+.pose-5 { animation-delay: .37s; }
+
+/* ------------------------------------------------------------------ plan */
+
+/* Plan cadastral plutôt que carte glissante : c'est un document, pas un GPS. */
+.plan {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--papier-creux);
+  border: 1px solid var(--filet);
+  border-radius: var(--rayon);
+  display: block;
+}
+.plan .parcelle { fill: color-mix(in srgb, var(--foret) 9%, transparent); stroke: var(--foret); stroke-width: 1.6; }
+.plan .marge    { fill: none; stroke: var(--filet); stroke-width: 1; stroke-dasharray: 4 3; }
+.plan .point    { fill: var(--encre); stroke: var(--papier-vif); stroke-width: 1.6; }
+.plan .point--hors { fill: var(--terre); }
+.plan .visee    { stroke: var(--encre-pale); stroke-width: 1; stroke-dasharray: 2 2; }
+.plan text      { font-family: var(--machine); font-size: 7px; fill: var(--discret); letter-spacing: .06em; }
+
+/* --------------------------------------------------------------- tableaux */
+
+.tableau { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.tableau th {
+  text-align: left;
+  font-family: var(--machine);
+  font-size: .63rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--discret);
+  font-weight: 400;
+  padding: .5rem .7rem;
+  background: var(--papier-creux);
+  border-bottom: 1px solid var(--filet);
+}
+.tableau td { padding: .58rem .7rem; border-bottom: 1px solid var(--filet-fin); vertical-align: top; }
+.tableau tr:last-child td { border-bottom: none; }
+.tableau .num { text-align: right; font-family: var(--machine); font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ grille */
+
+.duo   { display: grid; gap: clamp(1.4rem, 3vw, 2.6rem); grid-template-columns: 1fr; }
+.trio  { display: grid; gap: clamp(1rem, 2.4vw, 1.8rem); grid-template-columns: 1fr; }
+@media (min-width: 62rem) {
+  .duo  { grid-template-columns: 1fr 1fr; }
+  .trio { grid-template-columns: repeat(3, 1fr); }
+  .duo--large { grid-template-columns: 1.35fr 1fr; }
+  .duo--etroit { grid-template-columns: 1fr 1.5fr; }
+}
+
+.rangee { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }
+.entre  { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+
+/* --------------------------------------------------------------- en-tête */
+
+.bandeau {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--papier) 92%, transparent);
+  backdrop-filter: blur(9px) saturate(1.15);
+  border-bottom: 1px solid var(--filet);
+}
+.bandeau__interieur { display: flex; align-items: center; gap: 1.4rem; padding: .82rem 0; justify-content: space-between; }
+
+.marque {
+  font-family: var(--display);
+  font-size: 1.18rem;
+  letter-spacing: .04em;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+}
+.marque span {
+  font-family: var(--machine);
+  font-size: .6rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--discret);
+}
+
+.nav { display: flex; gap: 1.2rem; align-items: center; }
+.nav a {
+  font-family: var(--machine);
+  font-size: .69rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--encre-pale);
+  transition: color var(--transition);
+}
+.nav a:hover, .nav a[aria-current] { color: var(--encre); }
+.nav a[aria-current] { text-decoration: underline; text-underline-offset: .4em; text-decoration-color: var(--foret); }
+
+/* ----------------------------------------------------------------- champs */
+
+.champ { display: block; }
+.champ > span {
+  display: block;
+  font-family: var(--machine);
+  font-size: .63rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--discret);
+  margin-bottom: .38rem;
+}
+.champ input, .champ select, .champ textarea {
+  width: 100%;
+  font: inherit;
+  font-size: .93rem;
+  padding: .62rem .78rem;
+  border: 1px solid var(--filet);
+  border-radius: var(--rayon);
+  background: var(--papier-vif);
+  color: var(--encre);
+  transition: border-color var(--transition);
+}
+.champ input:focus, .champ select:focus, .champ textarea:focus { border-color: var(--foret); outline: none; }
+.champ textarea { resize: vertical; min-height: 5rem; }
+
+/* --------------------------------------------------------------- utilitaires */
+
+.centre { text-align: center; }
+.sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.section { padding: clamp(3.2rem, 8vw, 6.5rem) 0; }
+.section--serree { padding: clamp(2rem, 5vw, 3.4rem) 0; }
+.filet { height: 1px; background: var(--filet); border: 0; margin: 0; }
+
+/* Barre de progression : un filet qui se remplit, pas une jauge d'application. */
+.jauge { height: 3px; background: var(--filet); border-radius: 2px; overflow: hidden; }
+.jauge > i { display: block; height: 100%; background: var(--foret); transition: width .8s cubic-bezier(.22,.61,.36,1); }
+
+.charge {
+  display: inline-block;
+  width: 11px; height: 11px;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: tourne .7s linear infinite;
+}
+@keyframes tourne { to { transform: rotate(360deg); } }

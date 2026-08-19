@@ -1,0 +1,9 @@
+node_modules/
+
+# Magasin de donnees : régénéré au démarrage par server/seed.js (semer()).
+# Ne pas versionner un dossier de démo joué en local ni des preuves binaires.
+data/*.json
+data/*.jsonl
+data/preuves/
+
+.DS_Store

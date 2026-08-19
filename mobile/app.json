@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Nodjal Terrain",
+    "slug": "nodjal-terrain",
+    "version": "0.4.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#1A1814",
+    "android": {
+      "package": "africa.nodjal.terrain",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "plugins": [
+      ["expo-camera", { "cameraPermission": "Nodjal utilise l'appareil photo pour les prises de vue imposees du jalon." }],
+      ["expo-location", { "locationAlwaysAndWhenInUsePermission": "Nodjal enregistre la position de chaque prise de vue pour verifier qu'elle a ete faite sur la parcelle." }]
+    ],
+    "extra": {
+      "apiUrl": "https://api.nodjal.africa"
+    }
+  }
+}

@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nodjal — le tiers de confiance de l'argent de la diaspora</title>
+<meta name="description" content="Un compte séquestre couplé à un système de preuve d'exécution. Financer un chantier au Cameroun depuis la France, sans jamais payer avant que le travail soit prouvé fait.">
+<meta name="theme-color" content="#F6F3EC">
+<meta property="og:title" content="Nodjal — Rien n'est payé tant que rien n'est prouvé.">
+<meta property="og:description" content="Le tiers de confiance de l'argent de la diaspora. Séquestre par jalons et preuve d'exécution, sur le corridor France → Cameroun.">
+<meta property="og:locale" content="fr_FR">
+<link rel="stylesheet" href="/shared/nodjal.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231A1814'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' fill='%23F6F3EC' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+<style>
+  /* Réserve d'ouverture : la seule page où le papier cède la place à l'encre. */
+  .ouverture { background: var(--nuit); color: var(--papier); position: relative; overflow: hidden; }
+  .ouverture::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 80% at 78% 6%, rgba(47,107,79,.20), transparent 62%),
+      radial-gradient(90% 70% at 8% 96%, rgba(163,59,42,.14), transparent 58%);
+    pointer-events: none;
+  }
+  .ouverture .colonne { position: relative; z-index: 1; }
+  .ouverture .chapeau { color: rgba(246,243,236,.5); }
+  .ouverture .chapeau::after { background: rgba(246,243,236,.18); }
+  .ouverture h1 { color: var(--papier); }
+  .ouverture .exergue { color: rgba(246,243,236,.76); }
+
+  .ouverture__grille {
+    display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: end;
+    padding: clamp(3.4rem, 11vh, 7rem) 0 clamp(2.6rem, 7vh, 4.6rem);
+  }
+  @media (min-width: 64rem) { .ouverture__grille { grid-template-columns: 1.55fr .95fr; } }
+
+  .signature {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 1rem + 2.1vw, 2.45rem);
+    line-height: 1.24;
+    letter-spacing: -.018em;
+    margin: 1.5rem 0 0;
+    max-width: 22ch;
+    color: var(--papier);
+  }
+  .signature em { font-style: italic; color: #8FC6A8; }
+
+  /* Deux affaires réelles, présentées comme deux pages en regard. */
+  .affaires { display: grid; gap: 0; border: 1px solid var(--filet); border-radius: var(--rayon); overflow: hidden; }
+  @media (min-width: 56rem) { .affaires { grid-template-columns: 1fr 1fr; } }
+  .affaire { padding: clamp(1.4rem, 3vw, 2.1rem); background: var(--papier-vif); }
+  .affaire + .affaire { border-top: 1px solid var(--filet); }
+  @media (min-width: 56rem) { .affaire + .affaire { border-top: none; border-left: 1px solid var(--filet); } }
+  .affaire__lieu {
+    font-family: var(--machine); font-size: .66rem; letter-spacing: .17em;
+    text-transform: uppercase; color: var(--terre); margin: 0 0 .8rem;
+  }
+  .affaire__somme {
+    font-family: var(--display); font-size: clamp(1.9rem, 1.3rem + 2.2vw, 2.9rem);
+    line-height: 1; letter-spacing: -.03em; color: var(--terre); display: block; margin-bottom: .2rem;
+  }
+
+  .brique { border-top: 2px solid var(--encre); padding-top: 1.05rem; }
+  .brique__num {
+    font-family: var(--machine); font-size: .66rem; letter-spacing: .16em;
+    color: var(--discret); display: block; margin-bottom: .5rem;
+  }
+
+  .menaces { display: grid; gap: 0; border: 1px solid var(--filet); border-radius: var(--rayon); overflow: hidden; background: var(--papier-vif); }
+  .menace { display: grid; grid-template-columns: 46px 1fr; gap: 1rem; padding: 1rem clamp(.9rem, 2vw, 1.4rem); align-items: start; }
+  .menace + .menace { border-top: 1px solid var(--filet-fin); }
+  .menace__code {
+    font-family: var(--machine); font-size: .74rem; color: var(--terre);
+    border: 1px solid currentColor; border-radius: 2px; padding: .16rem 0;
+    text-align: center; margin-top: .1rem;
+  }
+  .menace__titre { font-weight: 600; font-size: .95rem; }
+  .menace__parade { font-size: .85rem; color: var(--encre-douce); margin-top: .22rem; line-height: 1.5; }
+
+  .pied { background: var(--nuit); color: rgba(246,243,236,.72); padding: clamp(2.6rem, 6vw, 4.2rem) 0 2.2rem; }
+  .pied a { color: var(--papier); }
+  .pied h3 { color: var(--papier); font-size: 1.05rem; }
+
+  .aveu { border-left: 3px solid var(--ocre); padding-left: 1.1rem; }
+  .aveu li { margin-bottom: .55rem; }
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <div class="colonne bandeau__interieur">
+    <a class="marque" href="/">Nodjal <span>Douala · Paris</span></a>
+    <nav class="nav">
+      <a href="#probleme">Le problème</a>
+      <a href="#produit">Le produit</a>
+      <a href="#preuve">La preuve</a>
+      <a href="/console">Console</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================================== ouverture -->
+<section class="ouverture">
+  <div class="colonne">
+    <div class="ouverture__grille">
+      <div>
+        <p class="chapeau pose pose-1">Tiers de confiance · corridor France → Cameroun</p>
+        <h1 class="pose pose-2">L'argent de la diaspora<br>arrive. Personne ne<br>vérifie ce qu'il devient.</h1>
+        <p class="signature pose pose-3">Rien n'est payé<br><em>tant que rien n'est prouvé.</em></p>
+      </div>
+      <div class="pile pose pose-4" style="--ecart:1.5rem">
+        <p class="exergue">
+          Un compte séquestre opéré avec un établissement de paiement agréé, couplé à un
+          système de preuve d'exécution. Les fonds ne sont libérés que jalon par jalon,
+          contre preuve.
+        </p>
+        <div class="rangee">
+          <a class="bouton bouton--foret" href="#attente">Rejoindre la liste d'attente</a>
+          <a class="bouton bouton--creux" href="/console" style="--texte-bouton:var(--papier); border-color:rgba(246,243,236,.28); background:transparent;">Voir un chantier réel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== le problème -->
+<section class="section" id="probleme">
+  <div class="colonne pile" style="--ecart:2.4rem">
+    <div>
+      <p class="chapeau">Ce que ça coûte, aujourd'hui</p>
+      <h2>Deux affaires. Trois mois d'écart.<br>Le même trou dans l'infrastructure.</h2>
+    </div>
+
+    <div class="affaires">
+      <article class="affaire">
+        <p class="affaire__lieu">Cergy, France · juin 2026</p>
+        <strong class="affaire__somme">1,27 M€</strong>
+        <p class="mention" style="margin-bottom:.9rem">97 victimes identifiées · 30 procédures ouvertes</p>
+        <p>
+          Une femme de 41 ans promet à la diaspora d'acheter des terrains et de construire
+          des maisons en Afrique de l'Ouest. Réseaux sociaux actifs, médias communautaires,
+          voyages exhibés. Arrestation le 24 juin. Procès renvoyé au 26 novembre 2027,
+          deux ans et demi après les faits.
+        </p>
+      </article>
+      <article class="affaire">
+        <p class="affaire__lieu">Almadies, Dakar · août 2026</p>
+        <strong class="affaire__somme">85 M FCFA</strong>
+        <p class="mention" style="margin-bottom:.9rem">Un seul investisseur · projet adossé à de faux documents fonciers</p>
+        <p>
+          Les investisseurs paient 7 millions FCFA pour le lotissement, puis 4 millions de
+          plus pour « accélérer le titre foncier ». Quand ils vont vérifier auprès de la
+          DSCOS, ils apprennent que le projet est bâti sur du néant.
+        </p>
+      </article>
+    </div>
+
+    <p class="exergue">
+      Ce ne sont pas des faits divers. Ce sont les symptômes visibles d'un trou dans
+      l'infrastructure financière du continent.
+    </p>
+  </div>
+</section>
+
+<!-- ====================================================== le chiffre -->
+<section class="section carte--encre" style="border-radius:0">
+  <div class="colonne">
+    <div class="duo duo--large" style="align-items:end">
+      <div>
+        <p class="chapeau" style="color:rgba(246,243,236,.5)">Cameroun · 2024 · source officielle</p>
+        <span class="chiffre" style="color:var(--papier)">652<small style="color:rgba(246,243,236,.55)">milliards de FCFA transférés par la diaspora camerounaise, dont 35 % depuis la France</small></span>
+      </div>
+      <div class="pile" style="--ecart:1.15rem">
+        <p style="color:rgba(246,243,236,.8)">
+          En hausse de 8 % sur un an. Devant les États-Unis (20 %) et la Belgique (12 %).
+          La diaspora camerounaise est passée de 349 000 personnes en 2015 à 500 000 en 2024.
+        </p>
+        <p style="color:rgba(246,243,236,.8)">
+          À l'échelle du continent, ce sont 95 milliards de dollars par an, soit 5,1 % du PIB
+          africain. Davantage que l'aide publique au développement. La Banque africaine de
+          développement mesure que <strong style="color:var(--papier)">75 % partent en consommation
+          immédiate</strong>, et en attribue la cause à un déficit de transparence et de
+          redevabilité.
+        </p>
+        <p class="mention" style="color:rgba(246,243,236,.5)">
+          Sources : rapport d'évaluation à mi-parcours de la SND30, ministère de l'Économie ·
+          Making Remittances Work for Africa, BAD, mars 2025.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== l'insight -->
+<section class="section">
+  <div class="colonne">
+    <div class="duo duo--etroit">
+      <p class="chapeau chapeau--seul">L'angle mort</p>
+      <div class="pile" style="--ecart:1.4rem">
+        <h2 style="max-width:20ch">On a résolu le transfert.<br>Pas la suite.</h2>
+        <p>
+          Quinze ans ont servi à construire les rails pour <em>transférer</em> l'argent vers
+          l'Afrique. Wave, Orange Money, Wise, Lemfi, Chipper : le transfert fonctionne, le
+          coût est passé sous 5 %.
+        </p>
+        <p>
+          Personne n'a construit les rails pour vérifier ce que l'argent devient une fois
+          arrivé. Le transfert s'arrête au moment où l'argent atterrit, c'est-à-dire
+          exactement au moment où le risque commence.
+        </p>
+        <p>
+          Investir à distance en Afrique n'est donc pas une décision financière. C'est un
+          pari sur la bonne foi d'un tiers. La diaspora fait alors le seul choix rationnel
+          disponible : elle envoie de petites sommes pour de la consommation, et renonce à
+          investir.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="filet">
+
+<!-- ====================================================== le produit -->
+<section class="section" id="produit">
+  <div class="colonne pile" style="--ecart:2.6rem">
+    <div>
+      <p class="chapeau">Le produit</p>
+      <h2>Trois briques, une seule règle.</h2>
+    </div>
+
+    <div class="trio">
+      <article class="brique">
+        <span class="brique__num">Brique 01</span>
+        <h3>Le séquestre</h3>
+        <p class="mention" style="margin-top:.6rem;font-size:.94rem;color:var(--encre-douce)">
+          L'argent est cantonné chez un établissement de paiement agréé, pas chez
+          l'entrepreneur. Il est découpé en jalons contractuels définis avant le premier
+          virement. Nodjal est le prestataire technique et le tiers vérificateur ; Nodjal ne
+          détient pas les fonds.
+        </p>
+      </article>
+      <article class="brique">
+        <span class="brique__num">Brique 02</span>
+        <h3>La preuve d'exécution</h3>
+        <p class="mention" style="margin-top:.6rem;font-size:.94rem;color:var(--encre-douce)">
+          Chaque jalon est validé par un faisceau de preuves qui se recoupent : photos
+          géolocalisées et horodatées, imagerie satellite pour l'antériorité du terrain,
+          factures rapprochées du devis quantitatif, inspecteur indépendant tirant au sort.
+          Un certificat d'avancement horodaté est émis.
+        </p>
+      </article>
+      <article class="brique">
+        <span class="brique__num">Brique 03</span>
+        <h3>Le réseau vérifié</h3>
+        <p class="mention" style="margin-top:.6rem;font-size:.94rem;color:var(--encre-douce)">
+          Les entreprises accumulent un historique de fiabilité : délais tenus, jalons validés
+          du premier coup, litiges. Cette réputation devient un actif transférable, et une
+          donnée que personne ne possède aujourd'hui sur la construction africaine.
+        </p>
+      </article>
+    </div>
+
+    <div class="carte carte--creuse">
+      <p class="chapeau chapeau--seul">Ce que Nodjal n'est pas</p>
+      <p style="margin-top:.7rem;max-width:none">
+        Nodjal ne construit pas et ne vend pas de terrain. Les agences de service diaspora ont
+        validé le besoin, certaines depuis 2017, mais elles sont elles-mêmes maîtres d'ouvrage :
+        quand le chantier dérape, c'est leur propre chantier qu'elles doivent auditer. Elles sont
+        juges et parties. <strong>Nodjal est le tiers neutre. C'est la différence entre un
+        promoteur et un notaire.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== le modèle de menace -->
+<section class="section" id="preuve" style="background:var(--papier-creux)">
+  <div class="colonne pile" style="--ecart:2.2rem">
+    <div class="entre">
+      <div>
+        <p class="chapeau">Le modèle de menace</p>
+        <h2>« Et si l'entrepreneur triche ? »</h2>
+      </div>
+      <span class="sceau">Six attaques<strong>Six parades</strong></span>
+    </div>
+
+    <p class="exergue" style="max-width:56ch">
+      Nous ne promettons pas l'infaillibilité. Aucune de ces preuves ne suffit seule. Prises
+      ensemble, elles rendent la fraude plus coûteuse que le travail. C'est le seul objectif
+      atteignable, et il suffit.
+    </p>
+
+    <div class="menaces">
+      <div class="menace">
+        <span class="menace__code">T1</span>
+        <div>
+          <p class="menace__titre">Photographier un autre chantier</p>
+          <p class="menace__parade">Géofence sur le polygone de la parcelle, plus cap boussole imposé pour chaque prise de vue.</p>
+        </div>
+      </div>
+      <div class="menace">
+        <span class="menace__code">T2</span>
+        <div>
+          <p class="menace__titre">Falsifier la position GPS</p>
+          <p class="menace__parade">Android expose le drapeau <span class="machine">isFromMockProvider</span> ; l'attestation d'intégrité vérifie que l'appareil n'est pas compromis. Un navigateur ne peut pas le savoir — c'est la raison d'être de l'application native.</p>
+        </div>
+      </div>
+      <div class="menace">
+        <span class="menace__code">T3</span>
+        <div>
+          <p class="menace__titre">Rejouer une photo ancienne</p>
+          <p class="menace__parade">Hachage perceptuel comparé à tout l'historique du projet. L'horodatage qui fait foi est celui du serveur, jamais celui de l'appareil.</p>
+        </div>
+      </div>
+      <div class="menace">
+        <span class="menace__code">T4</span>
+        <div>
+          <p class="menace__titre">Photographier un écran</p>
+          <p class="menace__parade">Prises multiples sous angles imposés dans une même session, plus un panoramique vidéo de trois secondes. Reproduire cela sur un écran coûte plus cher que de faire le travail.</p>
+        </div>
+      </div>
+      <div class="menace">
+        <span class="menace__code">T5</span>
+        <div>
+          <p class="menace__titre">S'entendre avec l'inspecteur</p>
+          <p class="menace__parade">Affectation par tirage, aucun inspecteur ne revient sur un chantier déjà visité. La règle est appliquée par la base de données, pas par une consigne.</p>
+        </div>
+      </div>
+      <div class="menace">
+        <span class="menace__code">T6</span>
+        <div>
+          <p class="menace__titre">Gonfler une facture fournisseur</p>
+          <p class="menace__parade">Rapprochement automatique avec le devis quantitatif et la base des fournisseurs référencés. Sans métré, une facture de ciment est invérifiable ; avec métré, elle est compatible avec l'ouvrage ou elle ne l'est pas.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="carte">
+      <p class="chapeau chapeau--seul">Sur le satellite, une précision qui compte</p>
+      <p style="margin-top:.7rem;max-width:none">
+        À 10 mètres par pixel, la résolution de Sentinel-2, une maison de 150 m² occupe moins de
+        deux pixels. Le satellite gratuit ne lit pas un avancement de toiture, et nous ne le
+        prétendons pas. Il sert à la <strong>vérification d'antériorité du terrain</strong> :
+        la parcelle existe-t-elle, était-elle vide au moment de la vente, y a-t-il eu une
+        activité. C'est précisément l'arnaque des Almadies — un projet bâti sur du néant que
+        Sentinel-2 aurait montré en trente secondes, gratuitement, avant le premier virement.
+        Sentinel-1, en radar, traverse les nuages : au Cameroun, l'optique est inutilisable une
+        grande partie de la saison des pluies.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== pourquoi maintenant -->
+<section class="section">
+  <div class="colonne">
+    <div class="duo duo--etroit">
+      <p class="chapeau chapeau--seul">Pourquoi maintenant</p>
+      <div class="pile" style="--ecart:1.1rem">
+        <h2 style="max-width:20ch">Cette entreprise était impossible il y a cinq ans.</h2>
+        <ol class="pile" style="--ecart:.9rem;padding-left:1.2rem;max-width:60ch">
+          <li>Le smartphone est sur tous les chantiers camerounais : la photo géotaguée horodatée ne coûte plus rien.</li>
+          <li>L'imagerie satellite fréquente est devenue accessible, et Sentinel est gratuit.</li>
+          <li>La vision par ordinateur sait lire un avancement de gros œuvre. C'était de la recherche, c'est devenu un appel d'API.</li>
+          <li>Les établissements de paiement agréés UEMOA et CEMAC permettent le cantonnement de fonds en partenariat, sans licence bancaire propre.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="filet">
+
+<!-- ====================================================== modèle économique -->
+<section class="section">
+  <div class="colonne pile" style="--ecart:1.8rem">
+    <div>
+      <p class="chapeau">Modèle économique</p>
+      <h2>Un chantier type, poste par poste.</h2>
+    </div>
+    <div class="duo">
+      <div class="carte">
+        <table class="tableau">
+          <thead><tr><th>Source</th><th>Tarif</th><th>Payé par</th></tr></thead>
+          <tbody>
+            <tr><td>Frais de séquestre</td><td class="num">1,5 – 2,5 %</td><td>Donneur d'ordre</td></tr>
+            <tr><td>Abonnement suivi de chantier</td><td class="num">29 – 49 €/mois</td><td>Donneur d'ordre</td></tr>
+            <tr><td>Commission réseau vérifié</td><td class="num">3 – 5 %</td><td>Entreprise</td></tr>
+            <tr><td>Données de fiabilité <span class="mention">(phase 2)</span></td><td class="num">licence annuelle</td><td>Assureurs, banques</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pile" style="--ecart:1.1rem">
+        <p>
+          Un projet diaspora se situe entre 15 et 40 millions FCFA, soit 23 000 à 60 000 €,
+          sur 12 à 24 mois. Sur un chantier à 40 000 € étalé sur 18 mois :
+          <span class="machine">2 % × 40 000 € = 800 €</span> de séquestre,
+          plus <span class="machine">18 × 35 € = 630 €</span> d'abonnement, soit environ
+          <strong>1 430 € de revenu par projet</strong>, pour un coût d'acquisition visé sous 250 €.
+        </p>
+        <p>
+          Ce marché se gagne par les associations de ressortissants, les tontines et le
+          bouche-à-oreille, pas par la publicité payante.
+        </p>
+        <div class="carte carte--creuse">
+          <p class="mention" style="margin:0">
+            Ces chiffres sont des hypothèses de travail, que les chantiers pilotes ont
+            précisément pour objet de corriger. Nous les présentons comme telles.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== liste d'attente -->
+<section class="section" id="attente" style="background:var(--papier-creux)">
+  <div class="colonne">
+    <div class="duo">
+      <div class="pile" style="--ecart:1.1rem">
+        <p class="chapeau">Liste d'attente</p>
+        <h2 style="max-width:16ch">Un chantier au pays ?</h2>
+        <p>
+          Nous ouvrons le corridor France → Cameroun avec un nombre limité de chantiers
+          pilotes. Dites-nous d'où vous financez et ce que vous construisez.
+        </p>
+        <p class="mention">
+          Aucune adresse électronique n'est conservée en clair tant qu'une politique de
+          conservation n'est pas écrite et publiée. Ce formulaire enregistre la ville, le
+          corridor et le motif. Rien d'autre.
+        </p>
+      </div>
+      <form class="carte pile" style="--ecart:1rem" id="formulaire">
+        <label class="champ">
+          <span>Ville depuis laquelle vous financez</span>
+          <input name="ville" required maxlength="80" placeholder="Cergy, Bruxelles, Douala…">
+        </label>
+        <label class="champ">
+          <span>Corridor</span>
+          <select name="corridor">
+            <option>France vers Cameroun</option>
+            <option>Belgique vers Cameroun</option>
+            <option>États-Unis vers Cameroun</option>
+            <option>France vers Sénégal</option>
+            <option>Autre corridor</option>
+            <option>Je suis une entreprise de construction</option>
+          </select>
+        </label>
+        <label class="champ">
+          <span>Ce que vous construisez</span>
+          <textarea name="motif" maxlength="400" placeholder="Villa à Yaoundé, reprise de la maison familiale, extension…"></textarea>
+        </label>
+        <button class="bouton bouton--foret" type="submit">S'inscrire</button>
+        <p class="mention" id="retour" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== pied -->
+<footer class="pied">
+  <div class="colonne pile" style="--ecart:2.2rem">
+    <div class="duo">
+      <div class="pile" style="--ecart:.9rem">
+        <h3>Ce qui n'est pas fait, et qui doit l'être</h3>
+        <p style="color:rgba(246,243,236,.68);max-width:52ch">
+          Dit ici plutôt que découvert par un évaluateur. Un produit de confiance qui cache
+          ses limites se disqualifie lui-même.
+        </p>
+        <ul class="aveu pile" style="--ecart:0;color:rgba(246,243,236,.72);font-size:.9rem;list-style:none;padding-left:1.1rem;margin:0">
+          <li>Le séquestre est au <strong style="color:var(--papier)">palier 0</strong> : Nodjal autorise et trace le paiement jalon par jalon, mais ne détient aucun fonds. Le cantonnement exige une lettre d'intention avec un établissement agréé, qui n'est pas signée.</li>
+          <li>Les unit economics sont des hypothèses, pas des mesures. Aucun chantier pilote n'a encore corrigé le tarif.</li>
+          <li>L'horodatage qualifié RFC 3161 est écrit mais dormant : sans prestataire eIDAS configuré, le certificat porte l'heure serveur seule, et il le dit.</li>
+          <li>Le nom Nodjal n'a pas fait l'objet d'une recherche d'antériorité formelle à l'INPI et à l'OAPI, classes 36 et 42.</li>
+          <li>Les clichés du chantier de démonstration sont synthétiques et l'interface le signale en permanence. Nous ne faisons jamais passer une image fabriquée pour une photo de chantier.</li>
+        </ul>
+      </div>
+      <div class="pile" style="--ecart:1.2rem">
+        <h3>Le vocabulaire, précisément</h3>
+        <p style="color:rgba(246,243,236,.72);max-width:46ch">
+          Le certificat d'avancement n'est pas « opposable » : un document ne le devient pas
+          parce qu'il est horodaté. C'est un <strong style="color:var(--papier)">faisceau de
+          preuves horodatées et non répudiables</strong>. La nuance n'est pas cosmétique, et
+          un avocat la relèverait.
+        </p>
+        <p style="color:rgba(246,243,236,.72);max-width:46ch">
+          Et nous ne dirons jamais que notre IA détecte la fraude. Le modèle prépare le
+          dossier, l'humain tranche, et le système rend la fraude plus coûteuse que le
+          travail.
+        </p>
+        <p class="mention" style="color:rgba(246,243,236,.42)">
+          Nodjal · Douala et Paris · <a href="/console">console de démonstration</a> ·
+          <a href="/terrain">application terrain</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+import { api, $ } from '/shared/nodjal.js';
+
+$('#formulaire').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const bouton = e.target.querySelector('button');
+  const retour = $('#retour');
+  const donnees = Object.fromEntries(new FormData(e.target));
+  bouton.disabled = true;
+  retour.textContent = 'Enregistrement…';
+  try {
+    const r = await api('/liste-attente', { method: 'POST', corps: { ...donnees, source: 'landing' } });
+    e.target.reset();
+    retour.textContent = `Inscrit. Vous êtes la ${r.total}ᵉ inscription. Nous revenons vers vous à l'ouverture du corridor.`;
+  } catch (err) {
+    retour.textContent = `Échec de l'enregistrement : ${err.message}`;
+  } finally {
+    bouton.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
