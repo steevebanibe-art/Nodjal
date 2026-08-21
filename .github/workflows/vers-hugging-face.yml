@@ -57,4 +57,4 @@ jobs:
           HF_SPACE: ${{ vars.HF_SPACE }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git push --force "https://nodjal:$HF_TOKEN@huggingface.co/spaces/$HF_SPACE" HEAD:main
+          git push --force "https://Banibe:$HF_TOKEN@huggingface.co/spaces/$HF_SPACE" HEAD:main
