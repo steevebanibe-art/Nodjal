@@ -9,11 +9,18 @@
 #   * un SECRET nomme HF_TOKEN : un jeton d'ecriture cree sur
 #     huggingface.co/settings/tokens, de type « Write ».
 #   * une VARIABLE nommee HF_SPACE : le chemin du Space, par exemple
-#     nodjal/site, tel qu'il apparait dans son adresse.
+#     Banibe/nodjal, tel qu'il apparait dans son adresse.
 #
-# La poussee est forcee parce que le Space demarre avec son propre commit
-# initial : les deux histoires n'ont pas d'ancetre commun, et c'est le depot
-# GitHub qui fait autorite.
+# Ce qui part vers le Space est un COMMIT ORPHELIN unique, pas notre
+# historique. Deux raisons, et la seconde a coute deux echecs avant d'etre
+# comprise :
+#
+#   1. le Space n'a aucun besoin de connaitre l'histoire du projet ;
+#   2. Hugging Face refuse les fichiers binaires en git ordinaire et reclame
+#      Git LFS. Convertir les images en LFS dans un nouveau commit ne suffit
+#      pas : la poussee emporte aussi les commits anterieurs, ou les memes
+#      images figurent encore en clair, et le crochet de reception les voit.
+#      Un commit orphelin n'a pas de passe, donc plus rien a voir.
 
 name: Vers Hugging Face
 
@@ -34,8 +41,6 @@ jobs:
     steps:
       - name: Recuperer le depot
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Verifier que les reglages sont poses
         env:
@@ -52,22 +57,30 @@ jobs:
           fi
           echo "Cible : $HF_SPACE"
 
-      # Hugging Face refuse les fichiers binaires en git ordinaire et reclame
-      # Git LFS. La conversion se fait ICI, dans la copie de travail du
-      # coureur, et pas dans le depot GitHub : Render clone le depot tel quel
-      # et n'a donc jamais a savoir ce qu'est un pointeur LFS.
-      - name: Convertir les binaires en LFS pour le Space
-        run: |
-          git lfs install --local
-          git lfs track "*.jpg" "*.jpeg" "*.png" "*.woff2"
-          git add .gitattributes
-          git add --renormalize .
-          git -c user.name="Nodjal" -c user.email="ci@nodjal.invalid" commit -q -m "Suivi LFS des binaires, pour le Space uniquement" || echo "aucun binaire a convertir"
-          git lfs ls-files | head -20
-
-      - name: Pousser vers le Space
+      - name: Composer le commit orphelin et pousser
         env:
           HF_SPACE: ${{ vars.HF_SPACE }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git push --force "https://Banibe:$HF_TOKEN@huggingface.co/spaces/$HF_SPACE" HEAD:main
+          set -e
+          git lfs install --local
+
+          # Une branche sans parent : le contenu reste, l'historique disparait.
+          git checkout --orphan espace
+
+          # Le suivi LFS est declare AVANT le premier ajout, sinon les images
+          # entrent en clair et le crochet de reception refuse la poussee.
+          git lfs track "*.jpg" "*.jpeg" "*.png" "*.woff2"
+
+          # On vide l'index puis on le remplit : sans cela les fichiers deja
+          # indexes ne repassent pas par le filtre de nettoyage de LFS.
+          git rm -r --cached . -q
+          git add -A
+
+          git -c user.name="Nodjal" -c user.email="ci@nodjal.invalid" \
+              commit -q -m "Nodjal, synchronise depuis GitHub"
+
+          echo "--- fichiers suivis par LFS ---"
+          git lfs ls-files
+
+          git push --force "https://Banibe:$HF_TOKEN@huggingface.co/spaces/$HF_SPACE" espace:main
