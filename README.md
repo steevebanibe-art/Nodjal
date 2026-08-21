@@ -76,9 +76,10 @@ financière, c'est un pari sur la bonne foi d'un tiers.
 
 > La diaspora camerounaise a transféré **652 milliards de FCFA en 2024, dont 35 %
 > depuis la France** (SND30, ministère de l'Économie). À l'échelle du continent,
-> 95 milliards de dollars par an, dont **75 % partent en consommation immédiate**
-> — la Banque africaine de développement en attribue la cause à un déficit de
-> transparence et de redevabilité.
+> 95 milliards de dollars par an. Le FIDA mesure que, dans le monde, **environ
+> trois quarts de ces transferts couvrent des besoins courants**, nourriture,
+> santé, école, logement. Le quart restant est ce qui peut être épargné ou
+> investi.
 
 ---
 

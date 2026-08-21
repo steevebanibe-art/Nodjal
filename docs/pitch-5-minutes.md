@@ -28,8 +28,10 @@ minuté, vingt fois minimum.
 
 > **Cergy, France.** Une femme de 41 ans promet à la diaspora d'acheter des
 > terrains et de construire des maisons en Afrique de l'Ouest. Bilan :
-> **1,27 million d'euros, 97 victimes, 30 procédures.** Arrestation le 24 juin.
-> Procès renvoyé au 26 novembre 2027 — deux ans et demi après les faits.
+> **1 268 000 euros, 97 personnes se disant victimes, 30 procédures regroupées.**
+> Interpellation le 24 juin 2025, mise en examen, renvoi devant le tribunal de
+> Pontoise le 26 novembre 2027. Rien n'est jugé : dites « mise en examen », jamais
+> « escroc », et ne nommez personne.
 >
 > **Almadies, Dakar. Il y a trois mois.** Un projet immobilier adossé à de faux
 > documents fonciers. M. Diallo a viré **85 millions de FCFA**. Quand il va
@@ -53,9 +55,13 @@ deux affaires réunies.
 > africain, davantage que l'aide publique au développement. **La diaspora est
 > déjà le premier investisseur d'Afrique.**
 >
-> Et la Banque africaine de développement le mesure : **75 % partent en
-> consommation immédiate.** Elle en donne la cause — absence de transparence et
-> de redevabilité.
+> Et le FIDA le mesure : dans le monde, **environ trois quarts de ces transferts
+> couvrent des besoins courants**, nourriture, santé, école, logement. Le quart
+> restant est ce qui peut être épargné ou investi.
+>
+> *(Attention : ce chiffre est du FIDA, il est mondial, et il ne vient pas de la
+> Banque africaine de développement. L'ancienne version de ce document se
+> trompait d'attribution.)*
 
 *Slide : 652 posé très grand, la source en petit dessous. Rien d'autre.*
 
@@ -192,8 +198,8 @@ des candidats se sabordent.
 > s'arrête quand l'argent arrive. Le nôtre commence là. *(Orange est partenaire
 > de l'AMID — dites-le dans la salle.)*
 >
-> L'**analogue qui prouve le modèle** — **Brick&Bolt**, en Inde : ~16,5 M$ levés
-> auprès d'Accel, Surge/Sequoia et Foundamental, **valorisation de 105 M$ en mars
+> L'**analogue qui prouve le modèle** — **Brick&Bolt**, à Bangalore : **24 M$ levés
+> au total** auprès d'Accel, Foundamental et Peak XV, **valorisée environ 105 M$ en
 > 2025**, sur exactement ce modèle. Mais pour le marché domestique indien.
 > **Personne ne l'a construit pour le corridor diaspora → Afrique, où
 > l'asymétrie d'information est maximale parce que le donneur d'ordre est à

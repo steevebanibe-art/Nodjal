@@ -135,9 +135,9 @@ concurrents mais nos partenaires de distribution naturels : leur métier s'arrê
 au moment où l'argent arrive, c'est-à-dire exactement au moment où le risque
 commence. Le nôtre commence là.
 
-3. L'analogue étranger qui prouve le modèle. Brick&Bolt, en Inde, a levé environ
-16,5 millions de dollars auprès d'Accel, Surge/Sequoia et Foundamental, pour une
-valorisation de 105 millions de dollars en mars 2025, sur exactement ce modèle :
+3. L'analogue étranger qui prouve le modèle. Brick&Bolt, à Bangalore, a levé
+24 millions de dollars au total auprès d'Accel, Foundamental et Peak XV, pour une
+valorisation d'environ 105 millions de dollars en 2025, sur exactement ce modèle :
 jalons, séquestre, contrôles qualité, suivi à distance. Mais pour le marché
 domestique indien. Personne ne l'a construit pour le corridor diaspora vers
 l'Afrique, où l'asymétrie d'information est bien plus forte parce que le donneur
@@ -330,6 +330,7 @@ faisabilité ». Joignez-la, et mentionnez-la au pitch blanc.
 ## Sources
 
 - [Cameroun : 652 milliards FCFA transférés en 2024, dont 35 % depuis la France — EcoMatin](https://ecomatin.net/cameroun-la-diaspora-a-transfere-652-milliards-fcfa-en-2024-dont-35-depuis-la-france)
+- [Envois de fonds : environ trois quarts couvrent des besoins courants (chiffre mondial) — FIDA](https://www.ifad.org/fr/remittances)
 - [Making Remittances Work for Africa — Banque africaine de développement, mars 2025](https://www.afdb.org/sites/default/files/documents/publications/making_remittances_work_for_africa.pdf)
 - [Rapport African Talents Repat — African Business Club / AfricSearch / CIAN / ESCP, 2025](https://www.unicongo.cg/wp-content/uploads/2025/09/Rapport-African-Talent-Repat_pdf.pdf)
 - [Ensemble Back Home 2026 — AllAfrica](https://fr.allafrica.com/stories/202608050560.html)
