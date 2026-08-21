@@ -244,7 +244,7 @@ export function piloterHero({ hero, bandes, dessiner, lissage = 0.16 }) {
 
 export function animerEntrees(selecteur = '[data-entree]') {
   const cibles = document.querySelectorAll(selecteur);
-  if (RM.matches) { cibles.forEach((c) => c.classList.add('dedans', 'pose')); return; }
+  if (RM.matches) { cibles.forEach((c) => c.classList.add('dedans', 'retiree')); return; }
 
   const oeil = new IntersectionObserver((entrees, obs) => {
     for (const e of entrees) {
@@ -252,7 +252,7 @@ export function animerEntrees(selecteur = '[data-entree]') {
       e.target.classList.add('dedans');
       obs.unobserve(e.target);
       const n = e.target.children.length;
-      setTimeout(() => e.target.classList.add('pose'), 420 + n * 90);
+      setTimeout(() => e.target.classList.add('retiree'), 420 + n * 90);
     }
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
 

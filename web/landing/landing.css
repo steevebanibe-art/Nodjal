@@ -149,7 +149,11 @@ html, body { overflow-x: hidden; overflow-x: clip; }
 [data-entree] > *:nth-child(6) { transition-delay: 450ms; }
 [data-entree] > *:nth-child(n + 7) { transition-delay: 520ms; }
 
-[data-entree].pose > *:nth-child(n) { transition-delay: 0s !important; }
+/* Le nom « retiree » et pas « pose » : /shared/nodjal.css definit deja une
+   classe .pose portant une animation en fill-mode both, dont la valeur finale
+   « transform: none » ecrase definitivement toute transformation de l'element.
+   La collision effacait le calage des legendes et parasitait chaque entree. */
+[data-entree].retiree > *:nth-child(n) { transition-delay: 0s !important; }
 
 /* Variante laterale, pour les blocs qui arrivent depuis la marge. */
 [data-entree="cote"] > * { transform: translateX(-22px); }
@@ -1010,3 +1014,73 @@ body.suspendu *::after { animation-play-state: paused !important; }
     padding-right: 1.5rem;
   }
 }
+
+/* ================================================================ les cliches
+
+   Deux bandeaux photographiques pleine largeur. Ce sont de vrais chantiers
+   camerounais, empruntes a Wikimedia Commons et credites sous chacun. Ils ne
+   pretendent a rien : la legende du premier dit elle meme qu'une photographie
+   ne prouve ni le lieu, ni la date, ni le mur. Le cliche sert l'argument au
+   lieu de le contredire.
+
+   La figure est un enfant direct de <main>, donc pleine largeur par nature :
+   pas de marge negative, pas de 100vw, donc aucun risque de debordement
+   horizontal. */
+
+.cliche { margin: 0; position: relative; background: var(--nuit); }
+
+.cliche__image {
+  display: block;
+  width: 100%;
+  height: clamp(20rem, 46vh, 30rem);
+  object-fit: cover;
+  object-position: center 58%;
+  /* Le tirage du registre : legerement desature et refroidi, pour que la
+     photographie appartienne a la meme encre que le reste de la page. */
+  filter: saturate(.86) contrast(1.04) brightness(.94);
+}
+@media (max-width: 46rem) {
+  .cliche__image { height: clamp(15rem, 38vh, 22rem); }
+}
+
+/* Un voile qui monte du bas : la legende s'y pose sans jamais lutter contre
+   les pixels de la photo. Le contraste est garanti par construction. */
+.cliche::after {
+  content: '';
+  position: absolute; inset: auto 0 0 0; height: 62%;
+  pointer-events: none;
+  background: linear-gradient(to top,
+    rgba(20, 18, 15, .94) 0%,
+    rgba(20, 18, 15, .78) 34%,
+    rgba(20, 18, 15, 0) 100%);
+}
+
+.cliche__pied {
+  position: absolute; left: 50%; bottom: clamp(1.3rem, 3vw, 2.4rem);
+  transform: translateX(-50%);
+  z-index: 1;
+  color: var(--papier);
+}
+.cliche__legende {
+  font-family: var(--texte);
+  font-style: italic;
+  font-size: clamp(1.02rem, .93rem + .45vw, 1.32rem);
+  line-height: 1.5;
+  max-width: 46ch;
+  color: color-mix(in srgb, #F6F3EC 94%, transparent);
+  text-shadow: 0 1px 3px rgba(8, 7, 5, .7);
+}
+.cliche__credit {
+  margin-top: .7rem;
+  font-family: var(--machine);
+  font-size: .6rem;
+  letter-spacing: .1em;
+  line-height: 1.6;
+  max-width: 62ch;
+  color: color-mix(in srgb, #F6F3EC 52%, transparent);
+}
+.cliche__credit a { color: color-mix(in srgb, #F6F3EC 74%, transparent); }
+
+/* La legende entre depuis le bas, une seule fois, sans fanfare. */
+.cliche__pied[data-entree] > * { transform: translateY(14px); }
+.cliche__pied[data-entree].dedans > * { transform: none; }
