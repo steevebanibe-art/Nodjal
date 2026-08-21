@@ -40,6 +40,7 @@ const TYPES = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.woff2': 'font/woff2',
   '.webmanifest': 'application/manifest+json',
   '.ico': 'image/x-icon',
 };
@@ -247,7 +248,11 @@ async function servirFichier(res, chemin) {
     res.writeHead(200, {
       'content-type': TYPES[extname(cible)] || 'application/octet-stream',
       'content-length': contenu.length,
-      'cache-control': 'no-cache',
+      // Les polices portent leur coupe dans leur nom : elles ne changent jamais
+      // sous un meme nom, donc le navigateur peut les garder un an.
+      'cache-control': extname(cible) === '.woff2'
+        ? 'public, max-age=31536000, immutable'
+        : 'no-cache',
     });
     return res.end(contenu);
   } catch {

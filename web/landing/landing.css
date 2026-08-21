@@ -838,3 +838,175 @@ body.suspendu *::after { animation-play-state: paused !important; }
   .bande { opacity: 1 !important; position: static !important; }
   .car, .mot { opacity: 1 !important; transform: none !important; }
 }
+
+/* ============================================================================
+   REPRISE ESTHETIQUE
+   ----------------------------------------------------------------------------
+   Ce bloc vient apres tout le reste, donc il gagne a specificite egale. Il
+   accorde la page aux trois vraies polices, et corrige ce que la premiere
+   version laissait flotter : des marges vides sans role, une colonne de
+   registre empilee au lieu d'etre lisible d'un coup d'oeil, et une barre de
+   navigation qui ne disait jamais ou l'on se trouvait.
+   ========================================================================== */
+
+/* ------------------------------------------------------- l'accord des voix
+
+   Instrument Serif titre, Spectral parle. Une italique de titrage se regarde,
+   une italique de labeur se lit : les sous-lignes passent donc au texte. */
+
+.bande .sous,
+.liberation__verdict,
+.affaire__citation,
+.menace__titre {
+  font-family: var(--texte);
+}
+
+.bande h1, .bande h2 {
+  font-size: clamp(2.6rem, 1.5rem + 4.5vw, 4.9rem);
+  line-height: 1.02;
+  letter-spacing: -.021em;
+  max-width: 15ch;
+}
+.bande .sous {
+  font-size: clamp(1.06rem, .98rem + .42vw, 1.28rem);
+  line-height: 1.56;
+  max-width: 38ch;
+  color: color-mix(in srgb, var(--papier) 80%, transparent);
+}
+.bande .chapeau { letter-spacing: .17em; }
+
+/* Les chiffres qui defilent doivent garder leur chasse, sinon la ligne
+   tremble a chaque image. */
+.liberation__somme,
+.affaire__somme,
+.chiffre { font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "tnum" 1; }
+
+/* IBM Plex Mono chasse large : les libelles de bouton respirent moins. */
+.bouton { font-size: .72rem; letter-spacing: .1em; padding: .82rem 1.4rem; }
+.bouton--foret, .bouton--nuit { padding-inline: 1.6rem; }
+
+/* --------------------------------------------- la marge qui accompagne
+
+   Dans les sections a colonne etroite, le chapeau restait seul dans un grand
+   vide. Il devient collant : il accompagne la lecture au lieu de la regarder
+   passer, et la marge cesse d'etre un trou. */
+
+@media (min-width: 60rem) {
+  .duo--etroit > :first-child {
+    position: sticky;
+    top: 7.5rem;
+    align-self: start;
+  }
+}
+
+/* ------------------------------------------- le registre, lisible en face
+
+   « Qui detient l'argent a cette seconde » est la colonne que personne n'ose
+   montrer. Empilee sous l'acte, elle se lisait comme une note de bas de page.
+   Posee en face, elle devient la demonstration. */
+
+@media (min-width: 62rem) {
+  .marche { grid-template-columns: 3.2rem minmax(0, 1fr) minmax(0, 21rem); gap: 1.4rem; align-items: baseline; }
+  .marche > div { display: contents; }
+  .marche__qui {
+    margin-top: 0;
+    border-left: 1px solid var(--filet-fin);
+    padding-left: 1.3rem;
+    align-self: stretch;
+  }
+}
+.marche__acte { max-width: 46ch; }
+.marche__qui { font-size: .64rem; line-height: 1.5; }
+
+/* ------------------------------------------------------ le fil de lecture
+
+   Une ligne fine sous le bandeau, qui avance avec la page. Elle ne clignote
+   pas et ne compte rien : elle dit seulement ou l'on en est. */
+
+.bandeau { position: sticky; }
+.bandeau::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: var(--foret);
+  transform: scaleX(var(--avancement, 0));
+  transform-origin: left center;
+  opacity: .85;
+}
+
+/* Le lien de la section ou l'on se trouve. Discret : un filet, pas un fond. */
+.nav a { position: relative; padding-block: .2rem; }
+.nav a::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -.2rem; height: 1px;
+  background: currentColor;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 320ms var(--sortie);
+}
+.nav a:hover::after { transform: scaleX(1); }
+.nav a[aria-current="true"] { color: var(--foret); }
+.nav a[aria-current="true"]::after { transform: scaleX(1); background: var(--foret); }
+
+/* ------------------------------------------------------------- les details */
+
+/* Les champs : un filet qui s'epaissit au focus plutot qu'un halo bleu. */
+.champ input, .champ select, .champ textarea {
+  font-family: var(--texte);
+  transition: border-color var(--transition), background var(--transition);
+}
+.champ input:focus, .champ select:focus, .champ textarea:focus {
+  outline: none;
+  border-color: var(--foret);
+  box-shadow: inset 0 -2px 0 var(--foret);
+}
+.verif__champ input { font-family: var(--machine); font-size: .9rem; }
+
+/* Les cartes des trois voies se soulevent a peine au survol. Nodjal est un
+   registre, pas une vitrine : le mouvement reste sous le seuil du remarquable. */
+.voie { transition: transform var(--lent) var(--sortie), border-color var(--lent) var(--sortie); }
+@media (hover: hover) {
+  .voie:hover { transform: translateY(-3px); border-color: var(--encre-pale); }
+  .voie--nous:hover { border-color: var(--foret); }
+}
+
+/* Les lignes du modele de menace s'eclairent au survol, sans bouger. */
+.menace { transition: background var(--transition); }
+@media (hover: hover) { .menace:hover { background: var(--papier); } }
+
+/* Le sceau de section respire au lieu d'etre pose de travers et immobile. */
+.sceau { font-size: .6rem; letter-spacing: .15em; }
+.sceau strong { font-size: .78rem; letter-spacing: .11em; }
+
+/* Un peu plus d'air entre les sections : la page est longue, la respiration
+   compte autant que le contenu. */
+.section { padding-block: clamp(3.8rem, 9vw, 7.5rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bandeau::after { transform: scaleX(1) !important; }
+  .voie:hover { transform: none !important; }
+}
+
+/* ------------------------------------------------ la feuille est la d'emblee
+
+   La grille, le cadre, la rose des vents et l'echelle ne sont pas des beats :
+   ce sont le papier. Ils sont poses des le premier pixel, et c'est le CONTENU
+   qui se dessine ensuite. Un acte vierge qui attend d'etre rempli dit mieux
+   l'histoire qu'une moitie d'ecran vide. */
+
+.bornage .cadre {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  opacity: calc(.62 + .38 * var(--cadre));
+}
+.bornage .cadre-fin { opacity: calc(.3 + .7 * var(--cadre)); }
+.bornage .mention-cadre { opacity: calc(.34 + .66 * clamp(0, (var(--p) - .04) * 6, 1)); }
+
+/* Sur petit ecran la navigation defile dans sa propre boite. Sans indice, le
+   lecteur croit que le dernier lien est coupe. Un fondu sur le bord droit dit
+   « ca continue » sans ajouter le moindre element. */
+@media (max-width: 52rem) {
+  .nav {
+    -webkit-mask-image: linear-gradient(to right, #000 0, #000 86%, transparent 100%);
+            mask-image: linear-gradient(to right, #000 0, #000 86%, transparent 100%);
+    padding-right: 1.5rem;
+  }
+}

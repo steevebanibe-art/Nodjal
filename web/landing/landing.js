@@ -148,3 +148,63 @@ $('#formulaire')?.addEventListener('submit', async (e) => {
 
 // Trace utile au diagnostic : quel mode d'ouverture a ete retenu.
 if (figeExige()) document.documentElement.dataset.ouverture = 'figee';
+
+/* ------------------------------------------------------ le fil de lecture
+
+   Une seule propriete sur la racine, ecrite au plus une fois par image et
+   seulement quand elle change vraiment. Le trait sous le bandeau la lit. */
+
+(() => {
+  const racine = document.documentElement;
+  let raf = null, dernier = -1;
+
+  function mesurer() {
+    raf = null;
+    const course = racine.scrollHeight - innerHeight;
+    const q = course > 0 ? Math.min(1, Math.max(0, scrollY / course)) : 0;
+    const arrondi = Math.round(q * 300) / 300;
+    if (arrondi === dernier) return;
+    dernier = arrondi;
+    racine.style.setProperty('--avancement', arrondi);
+  }
+
+  addEventListener('scroll', () => { if (raf === null) raf = requestAnimationFrame(mesurer); }, { passive: true });
+  addEventListener('resize', () => { if (raf === null) raf = requestAnimationFrame(mesurer); }, { passive: true });
+  mesurer();
+})();
+
+/* ------------------------------------------------- la section ou l'on est
+
+   Le lien de navigation de la section traversee se marque. On prend la
+   section dont le haut est passe le plus recemment sous le bandeau : c'est
+   celle que le lecteur a reellement sous les yeux. */
+
+(() => {
+  const liens = [...document.querySelectorAll('.nav a[href^="#"]')];
+  if (!liens.length) return;
+
+  const cibles = liens
+    .map((a) => ({ a, section: document.querySelector(a.getAttribute('href')) }))
+    .filter((c) => c.section);
+  if (!cibles.length) return;
+
+  let courant = null;
+  function marquer() {
+    const ligne = 140;   // sous le bandeau collant
+    let gagnant = null;
+    for (const c of cibles) {
+      if (c.section.getBoundingClientRect().top <= ligne) gagnant = c;
+    }
+    if (gagnant === courant) return;   // on n'ecrit que sur changement reel
+    courant?.a.removeAttribute('aria-current');
+    gagnant?.a.setAttribute('aria-current', 'true');
+    courant = gagnant;
+  }
+
+  let raf = null;
+  addEventListener('scroll', () => {
+    if (raf !== null) return;
+    raf = requestAnimationFrame(() => { raf = null; marquer(); });
+  }, { passive: true });
+  marquer();
+})();
