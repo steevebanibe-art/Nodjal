@@ -266,6 +266,27 @@ async function servirFichier(res, chemin) {
   }
 }
 
+// Les jalons historiques du jeu de demonstration sont marques « paye » et
+// portent une reference de certificat, mais aucun certificat n'avait jamais ete
+// emis : la reference pointait dans le vide. On les certifie reellement au
+// demarrage, de sorte que le verificateur public de la page d'accueil ait
+// quelque chose a verifier, et qu'un evaluateur puisse le tester sans compte.
+async function certifierHistorique() {
+  const deja = new Set(m.tous('certificats').map((c) => c.jalonId));
+  const aFaire = m.tous('jalons').filter((j) => j.statut === 'paye' && !deja.has(j.id));
+  for (const j of aFaire) {
+    try {
+      await api.analyserJalon(m, j.id, { avecVision: false });
+      await api.certifierJalon(m, j.id);
+    } catch (e) {
+      console.error(`  certificat du jalon ${j.ordre} impossible : ${e.message}`);
+    }
+  }
+  return aFaire.length;
+}
+
+const emisAuDemarrage = await certifierHistorique();
+
 serveur.listen(PORT, HOTE, async () => {
   const composants = (await api.etat(m)).composants;
   const actifs = composants.filter((c) => c.actif).length;
@@ -282,6 +303,8 @@ serveur.listen(PORT, HOTE, async () => {
   for (const c of composants) console.log(`    ${c.actif ? 'oui' : 'non'}  ${c.composant}`);
   console.log('');
   console.log(`  ${m.tous('projets').length} projet, ${m.tous('jalons').length} jalons, ${m.tous('preuves').length} preuves`);
+  const refs = m.tous('certificats').map((c) => c.reference);
+  console.log(`  ${refs.length} certificat(s)${emisAuDemarrage ? ` (dont ${emisAuDemarrage} emis au demarrage)` : ''}${refs.length ? ' : ' + refs.join(', ') : ''}`);
   console.log(`  Audit : ${m.audit().resume}`);
   console.log('');
 });

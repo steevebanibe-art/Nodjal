@@ -1,0 +1,840 @@
+/* ============================================================================
+   NODJAL · page publique
+   ----------------------------------------------------------------------------
+   Prolonge le systeme visuel de /shared/nodjal.css. Ce fichier ne redefinit pas
+   la marque, il lui donne le mouvement : l'ouverture epinglee, la choregraphie
+   du texte, les entrees de section, et l'environnement de fond qui fait de la
+   page un lieu traverse plutot qu'une pile d'ecrans.
+
+   Regle tenue partout : on n'anime que transform et opacity. Une lueur qui
+   pulse porte son ombre sur un pseudo-element dont on anime l'opacite, jamais
+   l'ombre elle meme.
+   ========================================================================== */
+
+:root {
+  --sortie:  cubic-bezier(.22, .61, .36, 1);
+  --entrant: cubic-bezier(.34, .01, .2, 1);
+  --lent:    720ms;
+
+  /* Le sceau vert est l'accent. Il apparait a doses rares : l'appel a
+     l'action, le focus, et deux moments d'emphase. Partout ailleurs, l'encre. */
+  --sceau-vif: #2F6B4F;
+  --sceau-clair: #8FC6A8;
+}
+
+html, body { overflow-x: hidden; overflow-x: clip; }
+
+/* Le lien d'evitement : premier element focalisable de la page. */
+.evitement {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--encre); color: var(--papier);
+  padding: .8rem 1.2rem; font-family: var(--machine); font-size: .74rem;
+  letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
+}
+.evitement:focus { left: 1rem; top: 1rem; }
+
+/* ------------------------------------------------------- l'environnement
+
+   Une seule couche fixe derriere toute la page. Elle derive tres lentement,
+   sur cent secondes, pour que le defilement ait la sensation d'un lieu qu'on
+   traverse. Jamais assez visible pour se remarquer, jamais absente. */
+
+.milieu {
+  position: fixed; inset: -20%;
+  z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(46% 38% at 22% 18%, color-mix(in srgb, var(--foret) 9%, transparent), transparent 68%),
+    radial-gradient(40% 42% at 84% 76%, color-mix(in srgb, var(--ocre) 7%, transparent), transparent 66%);
+  animation: derive 104s var(--entrant) infinite alternate -22s;
+}
+@keyframes derive {
+  from { transform: translate3d(-1.6%, -1.1%, 0) scale(1.02); }
+  to   { transform: translate3d(1.8%, 1.4%, 0) scale(1.06); }
+}
+
+/* ============================================================ choregraphie
+
+   Le titre d'une bande est decoupe en mots puis en caracteres par moteur.js.
+   Chaque caractere porte son seuil (--ts) et son decalage de depart, et
+   l'assemblage se lit sur --k, la progression de la bande. Tout est
+   reversible : on remonte, le texte se defait. */
+
+.lecteur-seul {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.decoupe { display: inline; }
+.mot { display: inline-block; white-space: nowrap; }
+.car { display: inline-block; will-change: transform, opacity; }
+
+/* (a) L'eparpillement : les caracteres se rassemblent depuis leur desordre.
+   Fait echo au faisceau de preuves qui se constitue piece par piece. */
+.ent-eparpille .car {
+  --kc: clamp(0, (var(--k, 0) - var(--ts, 0)) * 2.6, 1);
+  opacity: var(--kc);
+  transform:
+    translate(calc((1 - var(--kc)) * var(--dx, 0px)), calc((1 - var(--kc)) * var(--dy, 0px)))
+    rotate(calc((1 - var(--kc)) * var(--dr, 0deg)));
+}
+
+/* (b) La descente : les mots tombent a leur place, dans l'ordre de lecture. */
+.ent-descend .mot {
+  --kc: clamp(0, (var(--k, 0) - var(--tm, 0)) * 2.8, 1);
+  opacity: var(--kc);
+  transform: translateY(calc((1 - var(--kc)) * -26px));
+}
+
+/* (c) La frappe : le mot depasse sa taille puis se pose. Fait echo a un
+   impact, a une parade qui claque. Les mots marques .fort depassent plus
+   longtemps. */
+.ent-frappe .mot {
+  --kc: clamp(0, (var(--k, 0) - var(--tm, 0)) * 3, 1);
+  --ks: clamp(0, (var(--k, 0) - var(--tm, 0) - var(--retard, .1)) * var(--vitesse, 3.2), 1);
+  opacity: var(--kc);
+  transform: scale(calc(.62 + (.38 + var(--depassement, .12)) * var(--kc) - var(--depassement, .12) * var(--ks)));
+}
+.ent-frappe .mot.fort { --depassement: .24; --retard: .16; --vitesse: 2.6; }
+
+/* (d) La mise au point : deux copies superposees, l'une floue en permanence,
+   l'autre nette. On croise leurs opacites. On n'anime jamais le filtre lui
+   meme, qui n'est pas confie au compositeur. */
+.ent-net h1, .ent-net h2 { position: relative; }
+/* La copie floue porte AUSSI la classe .decoupe : sans le selecteur double,
+   la regle d'opacite de .decoupe la gagne a l'ordre et le flou reste allume
+   par dessus le texte net, en permanence. */
+.ent-net .decoupe.flou {
+  position: absolute; inset: 0; filter: blur(11px);
+  opacity: calc(1 - var(--k, 0)); pointer-events: none;
+}
+.ent-net .decoupe { opacity: var(--k, 0); }
+
+/* (e) La levee : les mots montent dans l'ordre, puis la sous-ligne, puis les
+   boutons. Trois arrivees dans une seule bande : c'est l'entree du repos. */
+.ent-leve .mot {
+  --kc: clamp(0, (var(--k, 0) - var(--tm, 0)) * 2.4, 1);
+  opacity: var(--kc);
+  transform: translateY(calc((1 - var(--kc)) * 22px));
+}
+.ent-leve .sous {
+  --ks: clamp(0, (var(--k, 0) - .62) * 3.6, 1);
+  opacity: var(--ks);
+  transform: translateY(calc((1 - var(--ks)) * 14px));
+}
+.ent-leve .rangee {
+  --kb: clamp(0, (var(--k, 0) - .76) * 4.4, 1);
+  opacity: var(--kb);
+  transform: translateY(calc((1 - var(--kb)) * 12px));
+}
+
+/* ============================================================ les entrees
+
+   Un bloc entre en scene une fois, ses enfants decales. Le decalage est
+   ensuite retire, faute de quoi chaque survol des elements suivants traine
+   du retard pour toujours. La regle de retrait repete le :nth-child pour
+   gagner la specificite, et porte !important par securite. */
+
+[data-entree] > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--lent) var(--sortie), transform var(--lent) var(--sortie);
+}
+[data-entree].dedans > * { opacity: 1; transform: none; }
+
+[data-entree] > *:nth-child(1) { transition-delay: 0ms; }
+[data-entree] > *:nth-child(2) { transition-delay: 90ms; }
+[data-entree] > *:nth-child(3) { transition-delay: 180ms; }
+[data-entree] > *:nth-child(4) { transition-delay: 270ms; }
+[data-entree] > *:nth-child(5) { transition-delay: 360ms; }
+[data-entree] > *:nth-child(6) { transition-delay: 450ms; }
+[data-entree] > *:nth-child(n + 7) { transition-delay: 520ms; }
+
+[data-entree].pose > *:nth-child(n) { transition-delay: 0s !important; }
+
+/* Variante laterale, pour les blocs qui arrivent depuis la marge. */
+[data-entree="cote"] > * { transform: translateX(-22px); }
+[data-entree="cote"].dedans > * { transform: none; }
+
+/* ============================================================== les vivants
+
+   Une boucle par section, au niveau du murmure, en pause hors ecran et sur
+   onglet cache. animation-play-state ne s'herite pas : la mise en pause doit
+   toucher chaque element ET chaque pseudo-element, un par un. */
+
+body.suspendu *,
+body.suspendu *::before,
+body.suspendu *::after { animation-play-state: paused !important; }
+
+[data-vivant] { animation-play-state: paused; }
+[data-vivant].en-vue { animation-play-state: running; }
+
+/* La lueur du sceau : l'ombre est posee a pleine force sur un pseudo-element,
+   et c'est son opacite qui respire. */
+.respire { position: relative; }
+.respire::after {
+  content: ''; position: absolute; inset: -14%;
+  border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 34px 2px color-mix(in srgb, var(--foret) 42%, transparent);
+  opacity: .18;
+  animation: souffle 7.5s ease-in-out infinite alternate -2.4s;
+}
+@keyframes souffle { from { opacity: .1; } to { opacity: .34; } }
+
+/* ============================================================== l'ouverture
+
+   Une zone haute contenant une scene collante en plein ecran. La progression du
+   defilement s'ecrit dans une SEULE propriete, --p, posee sur la scene. Tout le
+   dessin en decoule par calcul CSS : une ecriture DOM par image au maximum,
+   quel que soit le nombre d'elements qui bougent.
+
+   Le fond est dessine, donc le contraste du texte est garanti par construction.
+   Aucun voile n'est necessaire par dessus une image qu'on ne controle pas :
+   ici, on controle chaque pixel. */
+
+.hero { position: relative; height: 700vh; background: var(--nuit); }
+
+
+
+.etage {
+  --p: 0;
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  overflow: hidden; color: var(--papier);
+  display: grid; align-items: center;
+}
+
+/* La nuit du registre : jamais un noir pur, teinte vers l'encre du papier. */
+.etage__fond {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(78% 62% at 74% 34%, color-mix(in srgb, var(--foret) 15%, transparent), transparent 66%),
+    radial-gradient(64% 58% at 12% 92%, color-mix(in srgb, var(--terre) 11%, transparent), transparent 62%),
+    linear-gradient(168deg, #15130F 0%, #100E0B 58%, #171410 100%);
+}
+
+.etage__grain {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: var(--grain);
+  opacity: .05; mix-blend-mode: overlay;
+}
+
+.etage__interieur {
+  position: relative; z-index: 2;
+  width: var(--colonne); margin-inline: auto;
+  display: grid; align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+@media (min-width: 60rem) { .etage__interieur { grid-template-columns: 1fr 1fr; } }
+
+/* ---------------------------------------------------------- les bandes */
+
+.bandes { position: relative; min-height: 20rem; }
+@media (max-width: 60rem) { .bandes { min-height: 17rem; } }
+
+.bande {
+  position: absolute; inset: 0 0 auto 0;
+  display: flex; flex-direction: column; justify-content: center;
+  opacity: 0;
+  will-change: opacity;
+}
+.bande h1, .bande h2 {
+  font-size: clamp(2rem, 1.15rem + 3.4vw, 3.5rem);
+  line-height: 1.1; letter-spacing: -.02em;
+  color: var(--papier);
+  max-width: 17ch;
+}
+.bande .sous {
+  margin-top: 1.15rem;
+  font-family: var(--display); font-style: italic;
+  font-size: clamp(1.05rem, .95rem + .5vw, 1.32rem);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--papier) 74%, transparent);
+  max-width: 34ch;
+}
+.bande .rangee { margin-top: 1.6rem; display: flex; flex-wrap: wrap; gap: .7rem; }
+.bande .chapeau { flex-wrap: nowrap; white-space: nowrap; color: color-mix(in srgb, var(--papier) 46%, transparent); }
+.bande .chapeau::after { background: color-mix(in srgb, var(--papier) 17%, transparent); }
+.bande em { font-style: italic; color: var(--sceau-clair); }
+
+/* Etat fige : mouvement reduit ou impression. La derniere bande, seule,
+   posee dans son etat final. */
+.hero--fige .bande { position: static; opacity: 0; display: none; }
+.hero--fige .bande:last-child { display: flex; opacity: 1; }
+.hero--fige .etage { --p: 1; }
+
+/* Le repere de defilement, discret, qui s'efface des qu'on part. */
+.amorce {
+  position: absolute; left: 50%; bottom: 2.2rem; z-index: 3;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: .5rem;
+  font-family: var(--machine); font-size: .62rem; letter-spacing: .2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--papier) 40%, transparent);
+  opacity: clamp(0, 1 - var(--p, 0) * 9, 1);
+  pointer-events: none;
+}
+.amorce span { display: block; width: 1px; height: 2rem; background: currentColor; transform-origin: top; animation: filer 2.6s var(--entrant) infinite; }
+@keyframes filer { 0% { transform: scaleY(0); opacity: 0 } 30% { opacity: 1 } 100% { transform: scaleY(1); opacity: 0 } }
+@media (max-height: 560px) { .amorce { display: none; } }
+
+/* ===================================================== le plan de bornage
+
+   L'element signature du site : le plan cadastral de la parcelle pilote de
+   Bonaberi qui se dessine, se cote, recoit ses six prises de vue avec leur cap
+   impose, puis se scelle en certificat. Ce sont les coordonnees reelles du jeu
+   de demonstration servi par la console. Le site et le produit montrent le
+   meme chantier.
+
+   Chaque couche lit sa propre fenetre de progression sur --p. */
+
+.scene {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 38rem);
+
+  /* Les encres du plan. Un trait de geometre : fin, clair, sans effet. Sur la
+     nuit du registre il faut monter ces valeurs, sinon le trace disparait. */
+  --tr-encre: color-mix(in srgb, var(--papier) 74%, transparent);
+  --tr-vif:   color-mix(in srgb, var(--papier) 96%, transparent);
+  --tr-pale:  color-mix(in srgb, var(--papier) 34%, transparent);
+  --tr-sceau: #9FD4B6;
+
+  /* Chaque fenetre se ferme AVANT la fin de la bande qui l'annonce : une bande
+     qui dit « six prises » pendant qu'une seule est posee ment au lecteur. */
+  --cadre:   clamp(0, (var(--p) - .010) * 9,   1);   /* la feuille, tot */
+  --parcel:  clamp(0, (var(--p) - .100) * 5,   1);   /* bande 2 */
+  --bornes:  clamp(0, (var(--p) - .200) * 7,   1);
+  --cotes:   clamp(0, (var(--p) - .240) * 7.5, 1);
+  --prises:  clamp(0, (var(--p) - .395) * 6.5, 1);   /* bande 3, les six */
+  --liens:   clamp(0, (var(--p) - .600) * 8,   1);   /* bande 4 */
+  --villa:   clamp(0, (var(--p) - .775) * 8,   1);   /* bande 5 */
+  --sceau:   clamp(0, (var(--p) - .900) * 10,  1);
+}
+@media (max-width: 60rem) { .scene { width: min(82%, 25rem); margin-inline: auto; } }
+
+/* La villa se leve du plan : elle monte de quelques unites en se decouvrant,
+   et le plan sous elle s'estompe pour lui laisser la lumiere. */
+.bornage .villa {
+  opacity: var(--villa);
+  transform: translateY(calc((1 - var(--villa)) * 16px));
+}
+.bornage .villa .arete {
+  stroke-dasharray: 1430;
+  stroke-dashoffset: calc((1 - var(--villa)) * 1430);
+}
+.bornage .villa .paroi { opacity: calc(var(--villa) * .16); }
+.bornage .terrasse { opacity: calc(var(--parcel) * .1 * (1 - var(--villa) * .45)); }
+
+.bornage { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Le papier millimetre du geometre, tres pale, qui apparait en premier. */
+.bornage .grille { opacity: .34; }
+.bornage .grille-forte { opacity: .5; }
+
+/* Le polygone se trace. Perimetre mesure : 877 unites. */
+.bornage .limite {
+  stroke-dasharray: 877;
+  stroke-dashoffset: calc((1 - var(--parcel)) * 877);
+}
+
+/* Les etiquettes du plan : petites, en machine, jamais decoratives. */
+.bornage text {
+  font-family: var(--machine);
+  font-size: 9.5px; letter-spacing: .07em;
+  fill: var(--tr-encre);
+}
+.bornage .etiq { font-size: 8.5px; fill: var(--tr-sceau); }
+
+/* Les quatre bornes se posent, chacune un peu apres la precedente. */
+.bornage .borne {
+  --kb: clamp(0, (var(--bornes) - var(--t, 0)) * 3.4, 1);
+  opacity: var(--kb);
+  transform: scale(calc(.4 + .6 * var(--kb)));
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Les cotes : le trait se tire, puis la mesure s'inscrit. */
+.bornage .cote-trait {
+  stroke-dasharray: 300;
+  stroke-dashoffset: calc((1 - var(--cotes)) * 300);
+}
+.bornage .cote-texte { opacity: clamp(0, (var(--cotes) - .55) * 2.6, 1); }
+
+/* Les six prises de vue. Chacune plante son point, puis ouvre l'arc de son cap
+   impose. C'est la contre-mesure T1 rendue visible. */
+.bornage .prise {
+  --kp: clamp(0, (var(--prises) - var(--t, 0)) * 5.6, 1);
+  opacity: var(--kp);
+}
+.bornage .prise .point {
+  transform: scale(calc(.2 + .8 * var(--kp)));
+  transform-origin: center; transform-box: fill-box;
+}
+.bornage .prise .cone { opacity: calc(var(--kp) * .26); }
+.bornage .prise .cap {
+  stroke-dasharray: 60;
+  stroke-dashoffset: calc((1 - var(--kp)) * 60);
+}
+
+/* Les liens : chaque preuve rejoint le dossier. */
+.bornage .lien {
+  --kl: clamp(0, (var(--liens) - var(--t, 0)) * 4.4, 1);
+  stroke-dasharray: 400;
+  stroke-dashoffset: calc((1 - var(--kl)) * 400);
+  opacity: calc(var(--kl) * .5);
+}
+
+/* Le cadre du certificat se ferme autour du plan. Deux filets, comme un acte. */
+.bornage .cadre {
+  stroke-dasharray: 2064;
+  stroke-dashoffset: calc((1 - var(--cadre)) * 2064);
+}
+.bornage .cadre-fin { opacity: clamp(0, (var(--cadre) - .55) * 2.4, 1); }
+.bornage .mention-cadre { opacity: clamp(0, (var(--cadre) - .7) * 3.2, 1); }
+
+/* Le sceau s'appose : il depasse sa taille, puis se pose de travers. */
+.bornage .sceau-groupe {
+  opacity: clamp(0, var(--sceau) * 2.4, 1);
+  transform:
+    rotate(calc(-7deg + 4.6deg * var(--sceau)))
+    scale(calc(1.5 - .5 * var(--sceau)));
+  transform-origin: center; transform-box: fill-box;
+}
+
+/* La rose des vents et l'echelle : le mobilier du plan, present tot et discret. */
+.bornage .mobilier { opacity: .8; }
+
+/* ======================================================= le moment interactif
+
+   Le visiteur maintient le bouton, et l'argent monte au rythme ou les preuves
+   se posent. La jauge EST le bouton : on voit ce qu'on obtient en le tenant. */
+
+.liberation {
+  border: 1px solid var(--filet);
+  border-radius: var(--rayon);
+  background: var(--papier-vif);
+  overflow: hidden;
+  position: relative;
+}
+.liberation::before {
+  /* Le filet de marge du registre : un trait rouge pale a gauche du bloc. */
+  content: ''; position: absolute; inset: 0 auto 0 0; width: 2px;
+  background: color-mix(in srgb, var(--terre) 34%, transparent);
+}
+
+.liberation__tete {
+  display: flex; flex-wrap: wrap; gap: 1rem;
+  align-items: baseline; justify-content: space-between;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem);
+  border-bottom: 1px solid var(--filet-fin);
+}
+
+.liberation__corps {
+  display: grid; gap: clamp(1.2rem, 3vw, 2.2rem);
+  padding: clamp(1.1rem, 2.4vw, 1.6rem);
+}
+@media (min-width: 52rem) { .liberation__corps { grid-template-columns: .85fr 1.15fr; } }
+
+.liberation__somme {
+  font-family: var(--display);
+  font-size: clamp(2.1rem, 1.2rem + 3.6vw, 3.4rem);
+  line-height: .96; letter-spacing: -.035em;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: block;
+  color: var(--encre);
+  transition: color var(--lent) var(--sortie);
+}
+.liberation--scellee .liberation__somme { color: var(--foret); }
+
+/* Les six controles. Eteints, ils sont des cercles vides ; allumes, le sceau
+   se remplit et le detail se decouvre. Rien ne saute : tout glisse. */
+.controles { display: grid; gap: .1rem; }
+@media (min-width: 34rem) { .controles { grid-template-columns: 1fr 1fr; gap: .1rem .9rem; } }
+
+.controle {
+  display: grid; grid-template-columns: 1.15rem 1fr; gap: .6rem;
+  align-items: start; padding: .5rem 0;
+  border-top: 1px solid var(--filet-fin);
+}
+.controle__marque {
+  width: 1.15rem; height: 1.15rem; margin-top: .12rem;
+  border-radius: 50%; border: 1.5px solid var(--filet);
+  position: relative; flex: none;
+  transition: border-color var(--lent) var(--sortie), background var(--lent) var(--sortie);
+}
+.controle__marque::after {
+  content: ''; position: absolute; inset: 0;
+  background: no-repeat center/.62rem url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5.2 4.3 8.6 11 1.4' fill='none' stroke='%23FBF9F4' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  opacity: 0; transform: scale(.6);
+  transition: opacity 320ms var(--sortie), transform 320ms var(--sortie);
+}
+.controle--ok .controle__marque { border-color: var(--foret); background: var(--foret); }
+.controle--ok .controle__marque::after { opacity: 1; transform: scale(1); }
+
+.controle__titre {
+  font-size: .92rem; font-weight: 600;
+  color: var(--encre-pale);
+  transition: color var(--lent) var(--sortie);
+}
+.controle--ok .controle__titre { color: var(--encre); }
+.controle__detail {
+  font-size: .8rem; line-height: 1.5; color: var(--encre-pale);
+  max-width: 44ch;
+  opacity: 0; transform: translateY(-3px);
+  transition: opacity var(--lent) var(--sortie), transform var(--lent) var(--sortie);
+}
+.controle--ok .controle__detail { opacity: 1; transform: none; }
+.controle__code {
+  font-family: var(--machine); font-size: .6rem; letter-spacing: .13em;
+  color: var(--discret); margin-left: .45rem;
+}
+
+/* Le bouton a maintenir. Sa surface se remplit de vert a mesure du maintien :
+   la jauge n'est pas a cote du geste, elle est dedans. */
+.tenir {
+  --remplie: 0;
+  position: relative; overflow: hidden;
+  width: 100%; justify-content: center;
+  --fond: var(--encre); --texte-bouton: var(--papier-vif);
+  padding-block: .95rem;
+  touch-action: none;
+  cursor: grab;
+}
+.tenir::before {
+  content: ''; position: absolute; inset: 0;
+  transform-origin: left center;
+  transform: scaleX(var(--remplie));
+  background: var(--foret);
+  transition: none;
+}
+.tenir > * { position: relative; }
+.liberation--tenue .tenir { cursor: grabbing; }
+.tenir:disabled { opacity: 1; cursor: default; }
+
+.liberation__consigne {
+  font-family: var(--machine); font-size: .68rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--discret);
+  margin-top: .7rem; min-height: 1.6em;
+}
+
+.liberation__verdict {
+  margin-top: .9rem; padding: .85rem 1rem;
+  border-left: 3px solid var(--foret);
+  background: var(--foret-clair);
+  font-size: .88rem; line-height: 1.55;
+}
+
+/* ================================================================ les sections
+
+   Regle tenue de bout en bout : deux sections voisines ne partagent jamais le
+   meme squelette. Le visiteur ne doit jamais sentir le meme gabarit tamponne
+   deux fois de suite. */
+
+.section--creuse { background: var(--papier-creux); }
+
+/* Le bouton de nuit : creux, mais sur fond sombre. */
+.bouton--nuit {
+  --fond: transparent;
+  --texte-bouton: var(--papier);
+  border-color: color-mix(in srgb, var(--papier) 30%, transparent);
+  background: transparent;
+  box-shadow: none;
+}
+.bouton--nuit:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--papier) 62%, transparent);
+  background: color-mix(in srgb, var(--papier) 7%, transparent);
+}
+
+/* -------------------------------------------------- la ligne reglementaire
+
+   Bande etroite, juste sous l'ouverture. Elle monte ici parce qu'en pied de
+   page une mention reglementaire se lit comme une dissimulation. */
+
+.reglementaire {
+  background: var(--nuit);
+  color: color-mix(in srgb, var(--papier) 82%, transparent);
+  padding: clamp(1.6rem, 3.5vw, 2.4rem) 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--papier) 12%, transparent);
+}
+.reglementaire__grille { display: grid; gap: .9rem 2.2rem; }
+@media (min-width: 58rem) {
+  .reglementaire__grille { grid-template-columns: 12rem 1fr 16rem; align-items: start; }
+}
+.reglementaire .chapeau { color: color-mix(in srgb, var(--papier) 46%, transparent); margin: 0; }
+.reglementaire p { max-width: 62ch; }
+.reglementaire strong { color: var(--papier); }
+.reglementaire .mention { color: color-mix(in srgb, var(--papier) 52%, transparent); }
+
+/* ------------------------------------------------------------ les marches
+
+   Une liste numerotee, reliee par un filet vertical qui descend. Le squelette
+   est vertical, la ou les sections voisines sont en colonnes. */
+
+.marches { list-style: none; margin: 0; padding: 0; position: relative; }
+.marche {
+  display: grid; grid-template-columns: 3.2rem 1fr; gap: 1.2rem;
+  padding: 1.15rem 0; position: relative;
+  border-top: 1px solid var(--filet-fin);
+}
+.marche::before {
+  /* Le filet qui relie les marches, tire depuis le numero. */
+  content: ''; position: absolute; left: 1.05rem; top: 2.6rem; bottom: -1px;
+  width: 1px; background: var(--filet);
+}
+.marche--fin::before { display: none; }
+.marche__num {
+  font-family: var(--machine); font-size: .78rem; letter-spacing: .1em;
+  color: var(--papier-vif);
+  width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: var(--encre);
+  display: inline-flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+.marche--fin .marche__num { background: var(--foret); }
+.marche__acte { font-size: 1.02rem; max-width: 58ch; }
+.marche__qui {
+  font-family: var(--machine); font-size: .68rem; letter-spacing: .11em;
+  text-transform: uppercase; color: var(--encre-pale);
+  margin-top: .45rem;
+}
+.marche--fin .marche__qui { color: var(--foret); }
+
+/* --------------------------------------------------------- les deux affaires
+
+   Deux pages en regard, separees par un filet. */
+
+.affaires {
+  display: grid; gap: 0;
+  border: 1px solid var(--filet); border-radius: var(--rayon); overflow: hidden;
+}
+@media (min-width: 56rem) { .affaires { grid-template-columns: 1fr 1fr; } }
+.affaire { padding: clamp(1.4rem, 3vw, 2.1rem); background: var(--papier-vif); }
+.affaire + .affaire { border-top: 1px solid var(--filet); }
+@media (min-width: 56rem) {
+  .affaire + .affaire { border-top: none; border-left: 1px solid var(--filet); }
+}
+.affaire__lieu {
+  font-family: var(--machine); font-size: .66rem; letter-spacing: .17em;
+  text-transform: uppercase; color: var(--terre); margin: 0 0 .8rem;
+}
+.affaire__somme {
+  font-family: var(--display); font-size: clamp(1.9rem, 1.3rem + 2.2vw, 2.9rem);
+  line-height: 1; letter-spacing: -.03em; color: var(--terre);
+  font-variant-numeric: lining-nums tabular-nums;
+  display: block; margin-bottom: .2rem;
+}
+.affaire__citation {
+  margin-top: 1.1rem; padding-left: 1rem;
+  border-left: 2px solid var(--filet);
+  font-family: var(--display); font-style: italic;
+  font-size: .96rem; line-height: 1.5; color: var(--encre-douce);
+}
+
+/* ------------------------------------------------------- le modele de menace
+
+   Des lignes de registre : code a gauche, attaque puis parade a droite. */
+
+.menaces {
+  max-width: 64rem;
+  display: grid; gap: 0;
+  border: 1px solid var(--filet); border-radius: var(--rayon);
+  overflow: hidden; background: var(--papier-vif);
+}
+.menace {
+  display: grid; grid-template-columns: 46px 1fr; gap: 1rem;
+  padding: 1rem clamp(.9rem, 2vw, 1.4rem); align-items: start;
+}
+.menace + .menace { border-top: 1px solid var(--filet-fin); }
+.menace__code {
+  font-family: var(--machine); font-size: .74rem; color: var(--terre);
+  border: 1px solid currentColor; border-radius: 2px; padding: .16rem 0;
+  text-align: center; margin-top: .1rem;
+}
+.menace__titre {
+  font-family: var(--display); font-style: italic;
+  font-size: 1.02rem; color: var(--encre);
+}
+.menace__parade {
+  font-size: .88rem; color: var(--encre-douce);
+  margin-top: .32rem; line-height: 1.55; max-width: 68ch;
+}
+
+/* --------------------------------------------------------- les trois voies
+
+   Trois colonnes de definitions. La notre est marquee, sans etre criarde. */
+
+.voies { display: grid; gap: 1rem; }
+@media (min-width: 54rem) { .voies { grid-template-columns: repeat(3, 1fr); } }
+.voie {
+  border: 1px solid var(--filet); border-radius: var(--rayon);
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  background: var(--papier-vif);
+}
+.voie--nous { border-color: color-mix(in srgb, var(--foret) 45%, var(--filet)); background: var(--foret-clair); }
+.voie__titre {
+  font-size: 1.08rem; padding-bottom: .7rem;
+  border-bottom: 2px solid var(--encre);
+}
+.voie--nous .voie__titre { border-bottom-color: var(--foret); color: var(--foret); }
+.voie__liste { margin: 0; }
+.voie__liste > div { padding: .72rem 0; border-bottom: 1px solid var(--filet-fin); }
+.voie__liste > div:last-child { border-bottom: none; padding-bottom: 0; }
+.voie__liste dt {
+  font-family: var(--machine); font-size: .62rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--discret);
+}
+.voie__liste dd { margin: .3rem 0 0; font-size: .92rem; line-height: 1.5; }
+
+/* ---------------------------------------------------------------- les aveux
+
+   Un filet de marge a l'ocre : la couleur de ce qui est en instruction. */
+
+.aveux {
+  list-style: none; margin: 0; padding: 0 0 0 1.3rem;
+  border-left: 3px solid var(--ocre);
+  display: grid; gap: .95rem;
+  max-width: 74ch;
+}
+.aveux li { font-size: .95rem; line-height: 1.6; color: var(--encre-douce); }
+.aveux strong { color: var(--encre); }
+
+/* --------------------------------------------------------- le verificateur */
+
+.verif { display: flex; flex-wrap: wrap; gap: .8rem; align-items: end; }
+.verif__champ { flex: 1 1 20rem; }
+.verif__champ input { font-family: var(--machine); letter-spacing: .04em; }
+
+.verif__sortie:empty { display: none; }
+.verif__sortie {
+  border: 1px solid var(--filet); border-radius: var(--rayon);
+  padding: clamp(1rem, 2.2vw, 1.4rem);
+  background: var(--papier-vif);
+  border-left-width: 3px;
+}
+.verif__sortie--attente { border-left-color: var(--filet); color: var(--encre-pale); }
+.verif__sortie--ok      { border-left-color: var(--foret); }
+.verif__sortie--non     { border-left-color: var(--terre); }
+
+.verif__verdict {
+  font-family: var(--display); font-size: 1.2rem;
+  margin-bottom: .9rem;
+}
+.verif__sortie--ok  .verif__verdict { color: var(--foret); }
+.verif__sortie--non .verif__verdict { color: var(--terre); }
+
+.verif__faits { margin: 0; display: grid; gap: 0; }
+.verif__faits > div {
+  display: grid; gap: .2rem 1.2rem;
+  padding: .55rem 0; border-top: 1px solid var(--filet-fin);
+}
+@media (min-width: 40rem) { .verif__faits > div { grid-template-columns: 14rem 1fr; align-items: baseline; } }
+.verif__faits dt {
+  font-family: var(--machine); font-size: .64rem; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--discret);
+}
+.verif__faits dd { margin: 0; font-size: .92rem; }
+.verif__hash { word-break: break-all; font-size: .78rem; line-height: 1.5; }
+.verif__sortie .mention { margin-top: .9rem; }
+
+/* ----------------------------------------------------------------- le pied */
+
+.pied {
+  background: var(--nuit);
+  color: color-mix(in srgb, var(--papier) 72%, transparent);
+  padding: clamp(2.6rem, 6vw, 4.2rem) 0 2.4rem;
+}
+.pied a { color: var(--papier); }
+.pied h3 { color: var(--papier); font-size: 1.05rem; }
+
+/* LES CINQ GARDES. Recopiees caractere pour caractere depuis moteur.js. Elles
+   posent l'ouverture figee : le plan acheve, la villa levee, le sceau appose,
+   et le texte de la derniere bande. Une composition, pas un repli d'excuse. */
+@media (max-width: 720px),
+       (orientation: portrait) and (max-width: 1024px),
+       (orientation: portrait) and (pointer: coarse),
+       (orientation: landscape) and (pointer: coarse) and (max-height: 560px),
+       (prefers-reduced-motion: reduce) {
+  .hero { height: auto; }
+  .etage { position: static; height: auto; min-height: 100svh; padding: 5.5rem 0 4rem; }
+  .bandes { min-height: 0; }
+  .bande { position: static; display: none; opacity: 1; }
+  .bande:last-child { display: flex; }
+  .etage { --p: 1; }
+  .amorce { display: none; }
+
+  /* La choregraphie se lit sur --k, que le moteur n'ecrit plus ici. Sans ces
+     trois lignes, le titre et les boutons de la bande de repos restent
+     invisibles : le defaut le plus grave que ce mode puisse avoir. */
+  .bande .mot, .bande .car, .bande .sous, .bande .rangee, .bande .decoupe {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .bande .flou { display: none !important; }
+}
+
+/* ------------------------------------------------- le bandeau sur petit ecran
+
+   A 375 px la barre d'origine pousse la page hors de l'ecran. On replie la
+   navigation sous la marque, on la rend defilante horizontalement dans sa
+   propre boite, et le corps de page ne bouge plus. */
+
+@media (max-width: 52rem) {
+  .bandeau__interieur { flex-direction: column; align-items: stretch; gap: .55rem; padding: .7rem 0 .6rem; }
+  .marque { font-size: 1.06rem; }
+  .marque span { font-size: .55rem; }
+  .nav {
+    gap: 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: .15rem;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { white-space: nowrap; font-size: .64rem; }
+}
+
+/* ==================================================== confort et accessibilite */
+
+@media (pointer: coarse) {
+  .bouton { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  .nav a  { min-height: 44px; display: inline-flex; align-items: center; }
+}
+
+/* Le mouvement reduit est honore ENTIEREMENT et DANS LES DEUX SENS. On efface
+   les animations et les transitions, y compris sur les pseudo-elements, on
+   annule tous les retards, et on montre chaque element choregraphie dans son
+   etat final. On evite le « transform: none » general, qui jetterait hors de
+   l'ecran les elements positionnes par transformation. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    transition-delay: 0s !important;
+  }
+  .milieu { animation: none; transform: translate3d(0, 0, 0) scale(1.03); }
+
+  [data-entree] > * { opacity: 1 !important; transform: none !important; }
+
+  .ent-eparpille .car,
+  .ent-descend .mot,
+  .ent-frappe .mot,
+  .ent-leve .mot,
+  .ent-leve .sous,
+  .ent-leve .rangee { opacity: 1 !important; transform: none !important; }
+  .ent-net .flou { opacity: 0 !important; }
+  .ent-net .decoupe { opacity: 1 !important; }
+
+  .respire::after { opacity: .2 !important; animation: none !important; }
+
+  /* Le moment interactif est deja accompli : rien a maintenir. */
+  .controle__detail { opacity: 1 !important; transform: none !important; }
+  .tenir { display: none; }
+}
+
+/* L'impression : le registre redevient du papier. */
+@media print {
+  .milieu, .evitement, .bandeau { display: none !important; }
+  .bande { opacity: 1 !important; position: static !important; }
+  .car, .mot { opacity: 1 !important; transform: none !important; }
+}

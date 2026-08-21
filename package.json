@@ -11,8 +11,8 @@
     "seed": "node server/seed.js --reset",
     "demo": "node tools/demo.js",
     "econ": "node tools/econ.js",
-    "test": "node --test tests/",
-    "check": "node --test tests/ && node tools/econ.js --quiet"
+    "test": "node --test \"tests/*.test.js\"",
+    "check": "node --test \"tests/*.test.js\" && node tools/econ.js --quiet"
   },
   "dependencies": {}
 }

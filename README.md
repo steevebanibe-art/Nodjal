@@ -24,9 +24,21 @@ node tools/econ.js               # l'économie, calculée
 node server/server.js            # http://127.0.0.1:8787
 ```
 
-* `/` — la page publique
+* `/` — la page publique, avec son ouverture dessinée au trait et son
+  vérificateur de certificat utilisable sans compte
 * `/console` — l'espace du donneur d'ordre
 * `/terrain` — l'application de terrain, version navigateur
+
+La page publique est entièrement dessinée : aucune image, aucune vidéo, aucune
+police distante. Environ 124 ko au total, dont zéro octet d'imagerie. Ce n'est
+pas une contrainte de budget, c'est le produit qui parle : Nodjal affirme ne
+jamais faire passer une image fabriquée pour une preuve, donc son site ne
+s'ouvre pas sur une image fabriquée. Le raisonnement complet et la carte des
+bandes sont dans `docs/dossier-de-conception.md`.
+
+Le serveur émet au démarrage les certificats des jalons historiques du jeu de
+démonstration, de sorte que le vérificateur public de la page d'accueil ait
+quelque chose à vérifier sans qu'on ait à jouer la console d'abord.
 
 ---
 
