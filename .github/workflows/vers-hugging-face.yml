@@ -70,7 +70,7 @@ jobs:
 
           # Le suivi LFS est declare AVANT le premier ajout, sinon les images
           # entrent en clair et le crochet de reception refuse la poussee.
-          git lfs track "*.jpg" "*.jpeg" "*.png" "*.woff2"
+          git lfs track "*.jpg" "*.jpeg" "*.png" "*.webp" "*.gif" "*.woff2" "*.woff" "*.pdf" "*.mp4" "*.zip" "*.docx" "*.bin"
 
           # On vide l'index puis on le remplit : sans cela les fichiers deja
           # indexes ne repassent pas par le filtre de nettoyage de LFS.
