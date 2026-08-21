@@ -17,10 +17,11 @@ Le tiers de confiance de l'argent de la diaspora. Un compte séquestre couplé �
 système de preuve d'exécution, qui permet de financer un chantier au Cameroun
 depuis la France sans jamais payer avant que le travail soit prouvé fait.
 
-**En ligne : [nodjal.onrender.com](https://nodjal.onrender.com)**
-(plan gratuit Render — le service se met en veille après inactivité ; la
-première requête après une pause peut prendre jusqu'à 50 secondes à répondre.
-Le jeu de démonstration est reseedé automatiquement à chaque redémarrage.)
+**En ligne : [banibe-nodjal.hf.space](https://banibe-nodjal.hf.space)**
+(Hugging Face Space, image Docker. Le service reste éveillé 48 heures après
+chaque visite, ce qui évite la page d'erreur au réveil. Chaque poussée sur
+`main` déclenche la synchronisation et la reconstruction, sans rien à faire
+à la main. Le jeu de démonstration est régénéré à chaque redémarrage.)
 
 ---
 
@@ -40,12 +41,22 @@ node server/server.js            # http://127.0.0.1:8787
 * `/console` — l'espace du donneur d'ordre
 * `/terrain` — l'application de terrain, version navigateur
 
-La page publique est entièrement dessinée : aucune image, aucune vidéo, aucune
-police distante. Environ 124 ko au total, dont zéro octet d'imagerie. Ce n'est
-pas une contrainte de budget, c'est le produit qui parle : Nodjal affirme ne
-jamais faire passer une image fabriquée pour une preuve, donc son site ne
-s'ouvre pas sur une image fabriquée. Le raisonnement complet et la carte des
-bandes sont dans `docs/dossier-de-conception.md`.
+La page publique ne fait **aucune requête vers un tiers**. Ses trois polices
+(Instrument Serif, Spectral, IBM Plex Mono) sont servies depuis le dépôt, et
+son ouverture est un plan de bornage dessiné au trait plutôt qu'une image
+générée. Ce n'est pas une contrainte de budget, c'est le produit qui parle :
+Nodjal affirme ne jamais faire passer une image fabriquée pour une preuve,
+donc son site ne s'ouvre pas sur une image fabriquée.
+
+Deux bandeaux photographiques montrent de vrais chantiers camerounais,
+empruntés à Wikimedia Commons, crédités sous chacun, et accompagnés de la
+mention « ce chantier n'est pas un chantier Nodjal ». Ils sont en chargement
+différé et servis en deux définitions.
+
+Poids d'une première visite : environ 250 ko sans les photographies, dont
+130 ko de polices que le navigateur garde un an. Les visites suivantes
+retombent à une trentaine de kilo-octets. Le raisonnement complet et la carte
+des bandes sont dans `docs/dossier-de-conception.md`.
 
 Le serveur émet au démarrage les certificats des jalons historiques du jeu de
 démonstration, de sorte que le vérificateur public de la page d'accueil ait
