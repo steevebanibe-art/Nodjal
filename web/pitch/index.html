@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nodjal · dossier de candidature ANE 2026</title>
+<meta name="description" content="Nodjal découpe un chantier au Cameroun en jalons. À chaque jalon, une preuve. Sans preuve, l'argent ne bouge pas. Dossier ANE 2026.">
+<link rel="stylesheet" href="/shared/polices.css">
+<style>
+/* ============================================================================
+   NODJAL · dossier de candidature, format 16:9
+   ----------------------------------------------------------------------------
+   Dessine en HTML, imprime en PDF par Chrome. Memes polices et meme palette
+   que le site : un jure qui ouvre le lien apres avoir lu le dossier doit
+   reconnaitre la meme maison.
+
+   Une diapositive fait exactement 1280 x 720 pixels, soit 13,333 x 7,5 pouces
+   a 96 points par pouce. Toute la mise en page est absolue a l'interieur de ce
+   cadre : rien ne peut deborder d'une page a l'autre.
+   ========================================================================== */
+
+:root{
+  --papier:#F6F3EC; --papier-vif:#FBF9F4; --papier-creux:#EFEBE1;
+  --encre:#1A1814; --encre-douce:#3C3831; --encre-pale:#6B6459; --discret:#8B8375;
+  --nuit:#14120F; --foret:#2F6B4F; --foret-clair:#8FC6A8;
+  --terre:#A33B2A; --terre-clair:#D98A73; --ocre:#9A6B1E;
+  --filet:#DCD6C8; --filet-fin:#E8E3D7;
+  --display:'Instrument Serif','Palatino Linotype',Georgia,serif;
+  --texte:'Spectral','Sitka Text',Cambria,Georgia,serif;
+  --machine:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#2A2724}
+
+@page{ size:13.333in 7.5in; margin:0 }
+
+.diapo{
+  position:relative; width:1280px; height:720px; overflow:hidden;
+  background:var(--papier); color:var(--encre);
+  font:400 17px/1.55 var(--texte);
+  padding:74px 88px 68px;
+  page-break-after:always; break-after:page;
+  margin:0 auto 22px;
+}
+.diapo:last-child{page-break-after:auto;break-after:auto;margin-bottom:0}
+
+/* --- la nuit, pour les moments qui doivent frapper */
+.diapo--nuit{background:var(--nuit);color:var(--papier)}
+.diapo--nuit .kicker{color:rgba(246,243,236,.5)}
+.diapo--nuit .kicker::after{background:rgba(246,243,236,.2)}
+.diapo--nuit .note{color:rgba(246,243,236,.5)}
+.diapo--nuit .source{color:rgba(246,243,236,.42)}
+.diapo--nuit h2,.diapo--nuit h1{color:var(--papier)}
+.diapo--nuit .fort{color:var(--foret-clair)}
+.diapo--nuit .filet{background:rgba(246,243,236,.16)}
+.diapo--creux{background:var(--papier-creux)}
+
+/* --- le mobilier commun */
+.kicker{
+  font-family:var(--machine); font-size:11.5px; font-weight:500;
+  letter-spacing:.19em; text-transform:uppercase; color:var(--discret);
+  margin:0 0 22px; display:flex; align-items:center; gap:14px;
+  max-width:none; white-space:nowrap;
+}
+.kicker::after{content:'';flex:1;height:1px;background:var(--filet)}
+.kicker--seul::after{display:none}
+
+h1{font-family:var(--display);font-weight:400;font-size:82px;line-height:1;letter-spacing:-.022em;margin:0}
+h2{font-family:var(--display);font-weight:400;font-size:52px;line-height:1.04;letter-spacing:-.02em;margin:0;max-width:none}
+h3{font-family:var(--display);font-weight:400;font-size:25px;line-height:1.14;margin:0}
+p{margin:0;max-width:60ch}
+.lede{font-size:20px;line-height:1.55;color:var(--encre-douce);max-width:52ch}
+.diapo--nuit .lede{color:rgba(246,243,236,.8)}
+.note{font-size:14.5px;line-height:1.5;color:var(--encre-pale);max-width:64ch}
+.source{font-family:var(--machine);font-size:10.5px;letter-spacing:.06em;line-height:1.6;color:var(--discret);max-width:82ch}
+.fort{color:var(--foret)}
+.mono{font-family:var(--machine);font-size:.86em;letter-spacing:-.01em}
+em{font-style:italic}
+strong{font-weight:600}
+
+/* le numero de page, discret, en bas a droite */
+.folio{
+  position:absolute; right:88px; bottom:38px;
+  font-family:var(--machine); font-size:10.5px; letter-spacing:.16em;
+  color:var(--discret);
+}
+.diapo--nuit .folio{color:rgba(246,243,236,.34)}
+.signe{
+  position:absolute; left:88px; bottom:38px;
+  font-family:var(--machine); font-size:10.5px; letter-spacing:.16em;
+  color:var(--discret); text-transform:uppercase;
+}
+.diapo--nuit .signe{color:rgba(246,243,236,.34)}
+
+.filet{height:1px;background:var(--filet);border:0;margin:0}
+
+/* ------------------------------------------------------------- couverture */
+.couv{display:flex;flex-direction:column;justify-content:center;height:100%;position:relative;z-index:2}
+.couv h1{font-size:132px;letter-spacing:-.03em}
+.couv .devise{
+  font-family:var(--display);font-size:41px;line-height:1.16;font-style:italic;
+  color:var(--foret-clair);margin-top:26px;max-width:24ch;
+}
+.couv-bas{position:absolute;left:88px;right:88px;bottom:64px;z-index:2;display:flex;justify-content:space-between;align-items:flex-end}
+.plan-fond{position:absolute;right:-30px;top:50%;transform:translateY(-50%);width:560px;opacity:.5;z-index:1}
+
+/* ------------------------------------------------------ grilles de contenu */
+.deux{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
+.deux--large{grid-template-columns:1.25fr .9fr}
+.deux--etroit{grid-template-columns:.62fr 1.38fr}
+.trois{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.pile{display:flex;flex-direction:column}
+.pile>*+*{margin-top:var(--ecart,16px)}
+
+/* le chiffre pose grand */
+.chiffre{font-family:var(--display);font-size:150px;line-height:.86;letter-spacing:-.035em;
+  font-variant-numeric:lining-nums tabular-nums;display:block}
+.chiffre--moyen{font-size:96px}
+.chiffre--petit{font-size:58px;line-height:.95}
+.unite{font-family:var(--machine);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--discret);display:block;margin-top:14px;line-height:1.6}
+.diapo--nuit .unite{color:rgba(246,243,236,.55)}
+
+/* la carte, le registre */
+.carte{background:var(--papier-vif);border:1px solid var(--filet);border-radius:3px;padding:22px 24px}
+.diapo--nuit .carte{background:rgba(246,243,236,.05);border-color:rgba(246,243,236,.14)}
+.carte--vert{border-color:rgba(47,107,79,.4);background:#EDF3EF}
+.carte--terre{border-left:3px solid var(--terre)}
+
+/* les lignes de mecanique */
+.ligne{display:grid;grid-template-columns:38px 1fr 250px;gap:18px;align-items:baseline;
+  padding:10px 0;border-top:1px solid var(--filet-fin)}
+.diapo--nuit .ligne{border-top-color:rgba(246,243,236,.12)}
+.ligne__num{font-family:var(--machine);font-size:12px;color:var(--papier-vif);
+  background:var(--encre);width:26px;height:26px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center}
+.ligne--fin .ligne__num{background:var(--foret)}
+.ligne__acte{font-size:16.5px;line-height:1.45}
+.ligne__qui{font-family:var(--machine);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--encre-pale);line-height:1.55;border-left:1px solid var(--filet);padding-left:16px}
+.ligne--fin .ligne__qui{color:var(--foret)}
+
+/* les fraudes, deux colonnes */
+.fraude{display:grid;grid-template-columns:30px 1fr 1fr;gap:16px;align-items:start;
+  padding:9px 0;border-top:1px solid var(--filet-fin)}
+.fraude__code{font-family:var(--machine);font-size:11px;color:var(--terre);
+  border:1px solid currentColor;border-radius:2px;text-align:center;padding:2px 0;line-height:1.3}
+.fraude__dit{font-family:var(--texte);font-style:italic;font-size:14.5px;line-height:1.38;color:var(--encre)}
+.fraude__bloque{font-size:13.5px;line-height:1.42;color:var(--encre-douce)}
+
+/* les copies d'ecran */
+.ecran{border:1px solid var(--filet);border-radius:3px;overflow:hidden;background:var(--papier-vif);
+  box-shadow:0 14px 34px -18px rgba(26,24,20,.45)}
+.ecran img{display:block;width:100%;height:auto}
+.ecran--rogne{height:486px}
+.ecran--rogne img{height:100%;object-fit:cover;object-position:top left}
+.diapo--nuit .ecran{border-color:rgba(246,243,236,.2)}
+.legende{font-family:var(--machine);font-size:10.5px;letter-spacing:.08em;color:var(--discret);
+  margin-top:11px;line-height:1.6}
+.diapo--nuit .legende{color:rgba(246,243,236,.5)}
+
+/* le tableau du modele */
+.tab{width:100%;border-collapse:collapse;font-size:15.5px}
+.tab th{font-family:var(--machine);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--discret);text-align:left;font-weight:500;padding:0 0 9px;border-bottom:1px solid var(--filet)}
+.tab td{padding:11px 0;border-bottom:1px solid var(--filet-fin);vertical-align:top}
+.tab td.num{font-family:var(--machine);font-size:14px;white-space:nowrap}
+.tab tr:last-child td{border-bottom:0}
+
+/* les jalons dates */
+.jalon{display:grid;grid-template-columns:118px 1fr;gap:18px;padding:12px 0;
+  border-top:1px solid var(--filet-fin);align-items:baseline}
+.jalon__quand{font-family:var(--machine);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--foret)}
+.jalon__quoi{font-size:16px;line-height:1.45}
+
+/* la pastille d'etat */
+.past{display:inline-flex;align-items:center;gap:7px;font-family:var(--machine);
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  border:1px solid var(--filet);border-radius:100px;padding:4px 11px;color:var(--encre-pale)}
+.past::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.past--ok{color:var(--foret);border-color:rgba(47,107,79,.42);background:#EDF3EF}
+.past--cours{color:var(--ocre);border-color:rgba(154,107,30,.42);background:#FAF2E2}
+
+/* la citation */
+.citation{font-family:var(--display);font-size:31px;line-height:1.28;font-style:italic;
+  max-width:27ch}
+.citation__qui{font-family:var(--machine);font-size:11px;letter-spacing:.12em;
+  color:var(--discret);margin-top:20px;text-transform:uppercase;line-height:1.7}
+.diapo--nuit .citation__qui{color:rgba(246,243,236,.45)}
+
+/* la photo pleine hauteur en bandeau */
+.bande-photo{position:absolute;inset:auto 0 0 0;height:214px;overflow:hidden}
+.bande-photo img{width:100%;height:100%;object-fit:cover;object-position:center 60%;
+  filter:saturate(.84) brightness(.92)}
+.bande-photo::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(20,18,15,.5),rgba(20,18,15,0) 62%)}
+.credit-photo{position:absolute;right:88px;bottom:14px;z-index:2;
+  font-family:var(--machine);font-size:9px;letter-spacing:.07em;color:rgba(246,243,236,.62)}
+
+@media screen{ body{padding:22px 0} .diapo{box-shadow:0 18px 46px -24px rgba(0,0,0,.7)} }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════ 1 · couverture ══ -->
+<section class="diapo diapo--nuit">
+  <svg class="plan-fond" viewBox="0 0 640 640" aria-hidden="true">
+    <g stroke="rgba(246,243,236,.13)" stroke-width=".6" fill="none">
+      <path d="M40 160h560M40 216h560M40 272h560M40 328h560M40 384h560M40 440h560M40 496h560"/>
+      <path d="M96 136v420M152 136v420M208 136v420M264 136v420M320 136v420M376 136v420M432 136v420M488 136v420M544 136v420"/>
+    </g>
+    <path d="M124 336 L320 238 L516 336 L320 434 Z" fill="rgba(143,198,168,.07)"
+          stroke="rgba(246,243,236,.55)" stroke-width="1.6" stroke-linejoin="round"/>
+    <g fill="none" stroke="rgba(246,243,236,.62)" stroke-width="1.2">
+      <circle cx="124" cy="336" r="4.5"/><circle cx="320" cy="238" r="4.5"/>
+      <circle cx="516" cy="336" r="4.5"/><circle cx="320" cy="434" r="4.5"/>
+    </g>
+    <g fill="none" stroke="rgba(246,243,236,.75)" stroke-width="1.5" stroke-linejoin="round">
+      <path d="M222 336 L320 287 L418 336 L320 385 Z"/>
+      <path d="M222 336 L222 262 M320 385 L320 311 M418 336 L418 262"/>
+      <path d="M222 262 L320 213 L418 262 L320 311 Z"/>
+      <path d="M222 262 L320 178 M418 262 L320 178 M320 311 L320 178"/>
+    </g>
+    <g fill="none" stroke="#8FC6A8" stroke-width="1.6">
+      <circle cx="512" cy="486" r="34"/>
+      <path d="M499 488 L508 497 L527 476" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </svg>
+
+  <div class="couv">
+    <p class="kicker kicker--seul">African Next Entrepreneurs 2026 · catégorie Afrique</p>
+    <h1>Nodjal</h1>
+    <p class="devise">Rien n'est payé<br>tant que rien n'est prouvé.</p>
+  </div>
+  <div class="couv-bas">
+    <p class="source" style="max-width:52ch;color:rgba(246,243,236,.55)">
+      Le paiement d'un chantier au pays, conditionné à la preuve que le<br>
+      travail a bien été fait. Corridor France vers Cameroun.
+    </p>
+    <p class="source" style="text-align:right;color:rgba(246,243,236,.55)">
+      BANIBE Jean-Steeve · Douala<br>
+      banibe-nodjal.hf.space
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ 2 · le problème ══ -->
+<section class="diapo">
+  <p class="kicker">Le problème</p>
+  <div class="deux deux--large" style="margin-top:8px">
+    <div class="pile" style="--ecart:26px">
+      <p class="citation">
+        « Il m'envoyait des photos, des nouvelles sur WhatsApp
+        et des reçus. Tout paraissait en ordre.&nbsp;»
+      </p>
+      <p class="citation__qui">
+        Judith, infirmière ougandaise au Royaume-Uni.<br>
+        Son frère a construit une maison qui n'existait pas.
+      </p>
+      <hr class="filet" style="margin:6px 0">
+      <p class="lede" style="font-size:19px">
+        La photo de chantier existe déjà. C'est elle qui a servi à tromper.
+        Personne ne peut dire d'une photo où elle a été prise, quand,
+        ni si le mur qu'on y voit est le vôtre.
+      </p>
+    </div>
+    <div class="pile" style="--ecart:20px">
+      <div class="carte carte--terre">
+        <p class="kicker kicker--seul" style="margin-bottom:12px">Cergy, France · juin 2025</p>
+        <span class="chiffre chiffre--petit" style="color:var(--terre)">1 268 000 €</span>
+        <p class="note" style="margin-top:12px">
+          97 personnes se disent victimes d'un même intermédiaire qui promettait
+          d'acheter des terrains et de bâtir en Afrique de l'Ouest. Mise en examen
+          après interpellation le 24 juin 2025, renvoyée devant le tribunal de
+          Pontoise le 26 novembre 2027.
+        </p>
+      </div>
+      <div class="carte">
+        <p class="note" style="margin:0">
+          Sept projets diaspora sur dix finissent en conflit familial ou en perte
+          sèche, selon le cabinet LeFisk, qui accompagne la diaspora camerounaise.
+          Nous citons ce chiffre parce qu'il est publié, et nous n'en avons pas de
+          meilleur.
+        </p>
+      </div>
+    </div>
+  </div>
+  <p class="source" style="position:absolute;left:88px;bottom:64px">
+    Montants et dates retenus par l'enquête, rapportés par la presse en juillet 2025. Aucune condamnation n'est intervenue à ce jour.
+    Témoignage publié par Alex Kakande, « My brother ate the house », 2025.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">02</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════ 3 · le chiffre ══ -->
+<section class="diapo diapo--nuit">
+  <p class="kicker">Ce que la diaspora envoie déjà</p>
+  <div class="deux deux--large" style="margin-top:26px">
+    <div>
+      <span class="chiffre">652</span>
+      <span class="unite">milliards de FCFA envoyés au Cameroun en 2024<br>
+        soit près d'un milliard d'euros · 35 % depuis la France</span>
+    </div>
+    <div class="pile" style="--ecart:22px;padding-top:14px">
+      <p class="lede">
+        À l'échelle du continent, 95 milliards de dollars par an, soit
+        <span class="fort">5,1 % du PIB africain</span> contre 3,6 % en 2010.
+        La diaspora est devenue le premier financeur extérieur de l'Afrique,
+        devant l'aide publique au développement.
+      </p>
+      <div class="carte">
+        <p class="note" style="color:rgba(246,243,236,.78);margin:0">
+          Ce chiffre appartient au corridor, pas à Nodjal. Notre marché
+          adressable est calculé plus loin, à partir du nombre réel de
+          personnes concernées.
+        </p>
+      </div>
+    </div>
+  </div>
+  <p class="source" style="position:absolute;left:88px;bottom:64px;color:rgba(246,243,236,.45)">
+    Rapport d'évaluation à mi-parcours de la SND30, ministère de l'Économie du Cameroun, repris par EcoMatin, janvier 2026 ·
+    Institute for Security Studies, août 2025, sur données Banque mondiale.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">03</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════ 4 · l'angle mort ══ -->
+<section class="diapo">
+  <p class="kicker">L'angle mort</p>
+  <h2 style="margin-top:6px">Le trajet de l'argent est résolu.<br>Ce qui lui arrive après ne l'est pas.</h2>
+
+  <div style="margin-top:28px;position:relative">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--filet);border-radius:3px;overflow:hidden">
+      <div style="padding:22px 28px;background:var(--papier-vif)">
+        <p class="kicker kicker--seul" style="margin-bottom:14px">Envoyer</p>
+        <span class="chiffre chiffre--petit" style="color:var(--foret)">4,6 %</span>
+        <p class="note" style="margin-top:14px;max-width:38ch">
+          Coût moyen d'un transfert France vers Cameroun, l'un des corridors les
+          moins chers du continent. Dix minutes. Wave, Orange Money, Wise et Lemfi
+          ont réglé ce problème.
+        </p>
+        <p class="past past--ok" style="margin-top:14px">Résolu</p>
+      </div>
+      <div style="padding:22px 28px;background:var(--papier-creux);border-left:1px solid var(--filet)">
+        <p class="kicker kicker--seul" style="margin-bottom:14px">Vérifier ce qu'il devient</p>
+        <span class="chiffre chiffre--petit" style="color:var(--terre)">rien</span>
+        <p class="note" style="margin-top:14px;max-width:38ch">
+          Aucune infrastructure. Le transfert s'arrête à l'atterrissage, exactement
+          au moment où le risque commence. C'est là que Nodjal travaille.
+        </p>
+        <p class="past" style="margin-top:14px;color:var(--terre);border-color:rgba(163,59,42,.4)">Vide</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:12px;max-width:82ch;font-size:17.5px">
+    Nodjal ne concurrence donc ni Wise ni Orange Money : ce sont nos canaux de distribution naturels. Leur métier finit où le nôtre commence.
+  </p>
+  <p class="source" style="position:absolute;left:88px;bottom:64px">
+    Base Remittance Prices Worldwide de la Banque mondiale, troisième trimestre 2025. Moyenne Afrique subsaharienne : environ 8 %.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">04</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════ 5 · la mécanique ══ -->
+<section class="diapo">
+  <p class="kicker">Ce que Nodjal fait</p>
+  <h2 style="font-size:40px;margin-top:2px">Cinq lignes, et à chaque seconde,<br>le nom de celui qui tient l'argent.</h2>
+
+  <div style="margin-top:24px">
+    <div class="ligne">
+      <span class="ligne__num">01</span>
+      <p class="ligne__acte">Vous et l'entreprise fixez les jalons et leur montant, avant le premier virement.</p>
+      <p class="ligne__qui">L'argent est chez vous</p>
+    </div>
+    <div class="ligne">
+      <span class="ligne__num">02</span>
+      <p class="ligne__acte">Vous versez la tranche du jalon. Elle est bloquée chez un établissement de paiement agréé, pas transmise.</p>
+      <p class="ligne__qui">Chez l'établissement agréé</p>
+    </div>
+    <div class="ligne">
+      <span class="ligne__num">03</span>
+      <p class="ligne__acte">L'entreprise exécute le jalon, puis dépose ses preuves depuis le chantier.</p>
+      <p class="ligne__qui">Chez l'établissement agréé</p>
+    </div>
+    <div class="ligne">
+      <span class="ligne__num">04</span>
+      <p class="ligne__acte">Nodjal recoupe les preuves et émet, ou refuse, le certificat d'avancement.</p>
+      <p class="ligne__qui">Chez l'établissement agréé</p>
+    </div>
+    <div class="ligne ligne--fin">
+      <span class="ligne__num">05</span>
+      <p class="ligne__acte">Vous libérez la tranche contre certificat. Ou vous refusez, et elle reste où elle est.</p>
+      <p class="ligne__qui">À l'entreprise, ou retour</p>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:12px;font-size:17.5px;max-width:82ch">
+    À aucune ligne l'argent ne passe par Nodjal. C'est la différence entre un promoteur et un notaire.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">05</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════ 6 · le produit ══ -->
+<section class="diapo diapo--nuit">
+  <p class="kicker">Le produit tourne aujourd'hui</p>
+  <div class="deux" style="grid-template-columns:.46fr 1.54fr;gap:40px;margin-top:14px">
+    <div class="pile" style="--ecart:18px">
+      <h3 style="font-size:28px">La console<br>du donneur d'ordre</h3>
+      <p class="lede" style="font-size:17px">
+        Les six jalons du chantier avec leur montant, le plan de la parcelle avec
+        les prises de vue imposées, et chaque pièce du dossier avec son heure
+        serveur et son empreinte.
+      </p>
+      <div class="carte">
+        <p class="note" style="color:rgba(246,243,236,.8);margin:0;font-size:13.5px">
+          Les six boutons en bas à gauche déposent de vraies preuves frauduleuses
+          et laissent le moteur les traiter. Rien n'est mis en scène : le verdict
+          affiché est celui du moteur.
+        </p>
+      </div>
+      <p class="past past--ok" style="align-self:flex-start">72 tests automatisés passent</p>
+    </div>
+    <div>
+      <div class="ecran ecran--rogne"><img src="/pitch/img/console.jpg" alt="Console Nodjal : jalons, plan cadastral, pièces au dossier avec empreintes"></div>
+      <p class="legende">Copie d'écran réelle · chantier pilote Villa R+1, Bonaberi, Douala</p>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">06</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 7 · terrain + honnêteté ══ -->
+<section class="diapo">
+  <p class="kicker">Sur le chantier</p>
+  <div class="deux" style="grid-template-columns:.42fr .58fr;gap:56px;margin-top:14px">
+    <div style="display:flex;justify-content:center">
+      <div class="ecran" style="width:268px;height:452px;overflow:hidden">
+        <img src="/pitch/img/terrain.jpg" alt="Application terrain Nodjal sur téléphone" style="width:100%;height:100%;object-fit:cover;object-position:top center">
+      </div>
+    </div>
+    <div class="pile" style="--ecart:22px;padding-top:8px">
+      <h3 style="font-size:30px">L'application refuse<br>de savoir ce qu'elle ignore.</h3>
+      <p class="lede" style="font-size:17.5px">
+        Ouverte dans un navigateur, elle affiche elle-même que le drapeau de
+        position fictive d'Android n'y est pas lisible, et marque toute preuve
+        déposée depuis là comme d'origine inconnue.
+      </p>
+      <div class="carte carte--vert">
+        <p class="note" style="margin:0;font-size:15px;color:var(--encre-douce)">
+          C'est voulu. Un système qui prétend savoir ce qu'il ne peut pas savoir
+          n'est pas un système de preuve, c'est une promesse de plus. C'est aussi
+          la raison d'être de l'application native.
+        </p>
+      </div>
+      <p class="note" style="font-size:13.5px">
+        Les clichés du chantier de démonstration sont synthétiques et l'interface
+        le signale sur chaque écran. Nous ne faisons jamais passer une image
+        fabriquée pour une photo de chantier.
+      </p>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">07</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 8 · le vérificateur ══ -->
+<section class="diapo diapo--creux">
+  <p class="kicker">Vérifiez-nous sans nous croire</p>
+  <div class="deux deux--etroit" style="margin-top:14px">
+    <div class="pile" style="--ecart:20px">
+      <h3 style="font-size:30px">Un certificat que<br>vous pouvez contrôler<br>vous-même.</h3>
+      <p class="lede" style="font-size:17px">
+        Collez une référence de certificat sur la page publique. Le vérificateur
+        recalcule l'empreinte du manifeste, celle de chaque pièce du dossier, et
+        vous dit si tout concorde. Aucun compte n'est demandé.
+      </p>
+      <div class="carte carte--vert">
+        <p class="note" style="margin:0;font-size:15px;color:var(--encre-douce)">
+          Vous pouvez le faire pendant ce pitch, depuis votre téléphone :<br>
+          <span class="mono" style="font-size:15px;color:var(--encre)">banibe-nodjal.hf.space</span>
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="ecran"><img src="/pitch/img/verificateur.jpg" alt="Vérificateur public Nodjal affichant Concordance complète"></div>
+      <p class="legende">Vérification réelle, exécutée sur le serveur public</p>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">08</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 9 · six fraudes ══ -->
+<section class="diapo">
+  <p class="kicker">« Et si l'entrepreneur triche ? »</p>
+  <h2 style="font-size:36px;margin-top:0">Six façons de tricher, et ce qui les rend<br>plus chères que de faire le travail.</h2>
+
+  <div style="margin-top:18px">
+    <div class="fraude" style="border-top:0">
+      <span class="fraude__code">T1</span>
+      <p class="fraude__dit">« Je photographie le chantier du voisin. »</p>
+      <p class="fraude__bloque">La prise doit tomber dans le polygone de la parcelle et respecter l'angle imposé. Sinon elle est refusée avant d'être lue.</p>
+    </div>
+    <div class="fraude">
+      <span class="fraude__code">T2</span>
+      <p class="fraude__dit">« Je falsifie ma position, ça se fait en trois clics. »</p>
+      <p class="fraude__bloque">C'est vrai, et les métadonnées d'une photo aussi. C'est pourquoi elles ne font pas foi. Android expose le drapeau de position fictive, et l'empreinte est calculée à la réception.</p>
+    </div>
+    <div class="fraude">
+      <span class="fraude__code">T3</span>
+      <p class="fraude__dit">« Je renvoie la photo du mois dernier. »</p>
+      <p class="fraude__bloque">Comparaison d'empreinte avec tout l'historique du projet. L'heure qui fait foi est celle du serveur.</p>
+    </div>
+    <div class="fraude">
+      <span class="fraude__code">T4</span>
+      <p class="fraude__dit">« Je photographie un écran. »</p>
+      <p class="fraude__bloque">Plusieurs prises sous angles imposés dans une même session, plus un panoramique vidéo. Le reproduire coûte plus que de monter le mur.</p>
+    </div>
+    <div class="fraude">
+      <span class="fraude__code">T5</span>
+      <p class="fraude__dit">« Je m'arrange avec l'inspecteur. »</p>
+      <p class="fraude__bloque">Tirage au sort vérifiable, et aucun inspecteur ne revient sur un chantier déjà visité. La règle est tenue par la base de données.</p>
+    </div>
+    <div class="fraude">
+      <span class="fraude__code">T6</span>
+      <p class="fraude__dit">« Je gonfle la facture du cimentier. »</p>
+      <p class="fraude__bloque">Rapprochement avec le devis quantitatif. Sans métré une facture de ciment est invérifiable ; avec métré elle est compatible avec l'ouvrage ou elle ne l'est pas.</p>
+    </div>
+    <div class="fraude" style="grid-template-columns:30px 1fr;padding-top:12px">
+      <span></span>
+      <p class="note" style="max-width:none;font-size:13.5px;color:var(--encre-douce)">
+        Aucune de ces preuves ne suffit seule. Nous ne promettons pas l'infaillibilité : nous déplaçons le rapport entre le coût de la fraude et son gain.
+      </p>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">09</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 10 · le marché ══ -->
+<section class="diapo diapo--nuit">
+  <p class="kicker">Le marché, calculé plutôt qu'affirmé</p>
+  <div style="margin-top:22px">
+    <div class="trois" style="gap:0;border:1px solid rgba(246,243,236,.16);border-radius:3px;overflow:hidden">
+      <div style="padding:26px 26px 24px">
+        <span class="chiffre chiffre--moyen">102 000</span>
+        <span class="unite">personnes nées au Cameroun<br>vivent en France</span>
+      </div>
+      <div style="padding:26px;border-left:1px solid rgba(246,243,236,.16)">
+        <span class="chiffre chiffre--moyen">348 M€</span>
+        <span class="unite">envoyés depuis la France<br>chaque année, 35 % du total</span>
+      </div>
+      <div style="padding:26px;border-left:1px solid rgba(246,243,236,.16)">
+        <span class="chiffre chiffre--moyen">3 400 €</span>
+        <span class="unite">par personne et par an,<br>en moyenne</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="deux" style="margin-top:34px;gap:46px">
+    <p class="lede">
+      Nous ne partons pas d'un pourcentage d'un grand nombre. Nous partons du
+      nombre de personnes, du montant qu'elles envoient, et de ce qu'un chantier
+      coûte. Les corridors belge et américain portent 32 % du même flux et
+      s'ouvrent sans changer le produit.
+    </p>
+    <div class="carte">
+      <p class="kicker kicker--seul" style="margin-bottom:12px">Pourquoi ils construisent</p>
+      <p class="note" style="color:rgba(246,243,236,.8);margin:0">
+        Le Cameroun a livré <span class="fort">3 585 logements sociaux en dix-sept ans</span>,
+        soit 215 par an, face à une demande annuelle supérieure à 150 000 logements
+        neufs. Un logement public pour sept cents demandes. Celui qui veut un toit
+        le construit lui-même.
+      </p>
+    </div>
+  </div>
+  <p class="source" style="position:absolute;left:88px;bottom:64px;color:rgba(246,243,236,.45)">
+    Recensement INSEE 2023 · SND30, ministère de l'Économie · Centre for Affordable Housing Finance in Africa, 2025 · MINHDU.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">10</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 11 · le modèle ══ -->
+<section class="diapo">
+  <p class="kicker">Le modèle économique</p>
+  <h2 style="font-size:44px;margin-top:4px">Un chantier type rapporte 1 430 €.</h2>
+
+  <div class="deux deux--large" style="margin-top:32px;gap:48px">
+    <table class="tab">
+      <thead><tr><th>Source</th><th>Tarif</th><th>Payé par</th></tr></thead>
+      <tbody>
+        <tr><td>Frais sur les fonds bloqués</td><td class="num">1,5 – 2,5 %</td><td>Donneur d'ordre</td></tr>
+        <tr><td>Abonnement de suivi</td><td class="num">29 – 49 €/mois</td><td>Donneur d'ordre</td></tr>
+        <tr><td>Commission réseau vérifié</td><td class="num">3 – 5 %</td><td>Entreprise</td></tr>
+        <tr><td>Données de fiabilité <span style="color:var(--discret)">(phase 2)</span></td><td class="num">licence annuelle</td><td>Assureurs, banques</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pile" style="--ecart:16px">
+      <div class="carte carte--vert">
+        <p class="note" style="margin:0;color:var(--encre-douce);font-size:15px">
+          Chantier de 40 000 € sur 18 mois :<br>
+          <span class="mono">2 % × 40 000 € = 800 €</span> de frais,<br>
+          plus <span class="mono">18 × 35 € = 630 €</span> d'abonnement.<br>
+          <strong style="color:var(--foret)">1 430 € de revenu par projet</strong>,
+          pour un coût d'acquisition visé sous 250 €.
+        </p>
+      </div>
+      <p class="note">
+        Ce marché se gagne par les associations de ressortissants, les tontines et
+        le bouche-à-oreille. Pas par la publicité payante, dont le coût par client
+        rendrait ce modèle impossible.
+      </p>
+      <div class="carte">
+        <p class="note" style="margin:0;font-size:13.5px">
+          Ce sont des hypothèses de travail. Les chantiers pilotes ont précisément
+          pour objet de les corriger, et nous les présentons comme telles.
+        </p>
+      </div>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">11</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 12 · la concurrence ══ -->
+<section class="diapo diapo--creux">
+  <p class="kicker">La concurrence</p>
+  <h2 style="font-size:42px;margin-top:2px">Des gens font déjà du suivi de chantier.<br>Personne ne conditionne le paiement à la preuve.</h2>
+
+  <div class="trois" style="margin-top:32px">
+    <div class="carte">
+      <p class="kicker kicker--seul" style="margin-bottom:12px">Les agences diaspora</p>
+      <p class="note" style="margin-bottom:14px">
+        DiasporaBuild, Trust Construction Camer, SECAF, Wizodia. Elles ont validé
+        le besoin, certaines depuis 2017.
+      </p>
+      <p class="note" style="color:var(--terre)">
+        Mais elles sont maîtres d'ouvrage. Quand le chantier dérape, c'est leur
+        propre chantier qu'elles doivent auditer. Juges et parties.
+      </p>
+    </div>
+    <div class="carte">
+      <p class="kicker kicker--seul" style="margin-bottom:12px">Les acteurs du transfert</p>
+      <p class="note" style="margin-bottom:14px">
+        Orange Money, Wave, Wise, Lemfi. Leur métier s'arrête quand l'argent
+        arrive.
+      </p>
+      <p class="note" style="color:var(--foret)">
+        Ce ne sont pas des concurrents. Ce sont nos canaux de distribution
+        naturels, et le nôtre commence là où le leur finit.
+      </p>
+    </div>
+    <div class="carte carte--vert">
+      <p class="kicker kicker--seul" style="margin-bottom:12px">L'analogue qui prouve le modèle</p>
+      <p class="note" style="margin-bottom:14px;color:var(--encre-douce)">
+        <strong>Brick&amp;Bolt</strong>, Bangalore. Construction résidentielle par
+        jalons vérifiés. <strong>24 M$ levés</strong> auprès d'Accel, Foundamental
+        et Peak XV, valorisée environ <strong>105 M$ en 2025</strong>.
+      </p>
+      <p class="note" style="color:var(--foret)">
+        Mais pour le marché domestique indien. Personne ne l'a fait pour un
+        donneur d'ordre situé à cinq mille kilomètres, là où l'asymétrie
+        d'information est maximale.
+      </p>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:30px;max-width:80ch;font-size:18px">
+    Notre défensibilité ne vient pas de la technique, qui est copiable. Elle vient
+    de l'historique de fiabilité que nous constituons chantier après chantier sur
+    les entreprises de construction. Cette donnée n'existe nulle part aujourd'hui.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">12</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 13 · déjà prouvé ══ -->
+<section class="diapo">
+  <p class="kicker">Ce qui est déjà prouvé</p>
+  <h2 style="font-size:44px;margin-top:4px">Pas de courbe à montrer.<br>Un produit qui tourne, et vérifiable.</h2>
+
+  <div class="deux" style="margin-top:32px;gap:48px">
+    <div class="pile" style="--ecart:0">
+      <div class="ligne" style="grid-template-columns:1fr auto;border-top:0">
+        <p class="ligne__acte">Six contre-mesures actives, chacune reliée à une fraude nommée</p>
+        <span class="past past--ok">En ligne</span>
+      </div>
+      <div class="ligne" style="grid-template-columns:1fr auto">
+        <p class="ligne__acte">72 tests automatisés, exécutables par n'importe qui en une commande</p>
+        <span class="past past--ok">En ligne</span>
+      </div>
+      <div class="ligne" style="grid-template-columns:1fr auto">
+        <p class="ligne__acte">Certificats chaînés, vérifiables publiquement sans compte</p>
+        <span class="past past--ok">En ligne</span>
+      </div>
+      <div class="ligne" style="grid-template-columns:1fr auto">
+        <p class="ligne__acte">Trois interfaces livrées : page publique, console, application terrain</p>
+        <span class="past past--ok">En ligne</span>
+      </div>
+      <div class="ligne" style="grid-template-columns:1fr auto">
+        <p class="ligne__acte">Lettre d'intention avec un établissement de paiement agréé</p>
+        <span class="past past--cours">À obtenir</span>
+      </div>
+      <div class="ligne" style="grid-template-columns:1fr auto">
+        <p class="ligne__acte">Premier chantier réel sous contrat</p>
+        <span class="past past--cours">À obtenir</span>
+      </div>
+    </div>
+
+    <div class="pile" style="--ecart:18px">
+      <div class="carte carte--vert">
+        <p class="note" style="margin:0;color:var(--encre-douce);font-size:15px">
+          Le moteur a déjà corrigé deux défauts réels que le chantier pilote a
+          révélés : un rapprochement de factures qui comparait des matériaux à un
+          devis main-d'œuvre comprise, et un échec d'affectation d'inspecteur qui
+          était avalé en silence.
+          <br><br>
+          <strong style="color:var(--foret)">Un système qui n'a jamais rien révélé
+          sur lui-même n'a jamais été utilisé.</strong>
+        </p>
+      </div>
+      <div class="carte">
+        <p class="note" style="margin:0">
+          Coût de fonctionnement du prototype : moins de cent euros. Aucune
+          dépendance externe. Le décodeur d'image, le générateur de certificats et
+          le journal chaîné sont écrits à la main, ce qui rend le déploiement
+          possible partout.
+        </p>
+      </div>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">13</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 14 · les six mois ══ -->
+<section class="diapo diapo--nuit">
+  <p class="kicker">Les six prochains mois</p>
+  <h2 style="font-size:44px;margin-top:4px">Des dates, pas des projections.</h2>
+
+  <div style="margin-top:34px">
+    <div class="jalon" style="border-top:0">
+      <span class="jalon__quand">Octobre 2026</span>
+      <p class="jalon__quoi">Lettre d'intention signée avec un établissement de paiement agréé. Le blocage des fonds cesse d'être une intention.</p>
+    </div>
+    <div class="jalon" style="border-top-color:rgba(246,243,236,.14)">
+      <span class="jalon__quand">Novembre 2026</span>
+      <p class="jalon__quoi">Deux chantiers pilotes signés sur le corridor France vers Cameroun, avec des donneurs d'ordre réels.</p>
+    </div>
+    <div class="jalon" style="border-top-color:rgba(246,243,236,.14)">
+      <span class="jalon__quand">Décembre 2026</span>
+      <p class="jalon__quoi">Premier inspecteur indépendant recruté dans le Littoral, et dix entreprises référencées avec leur historique ouvert.</p>
+    </div>
+    <div class="jalon" style="border-top-color:rgba(246,243,236,.14)">
+      <span class="jalon__quand">Février 2027</span>
+      <p class="jalon__quoi">Premier certificat d'avancement émis pour un client tiers, et premier euro libéré contre preuve.</p>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:34px;max-width:76ch">
+    Chacune de ces dates est vérifiable après coup. Nous préférons quatre
+    engagements datés à une projection à cinq ans que personne ne croit.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">14</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 15 · l'équipe ══ -->
+<section class="diapo">
+  <p class="kicker">Pourquoi lui</p>
+  <div class="deux deux--large" style="margin-top:14px;gap:52px">
+    <div class="pile" style="--ecart:22px">
+      <h2 style="font-size:44px">BANIBE Jean-Steeve</h2>
+      <p class="lede">
+        Élève ingénieur statisticien économiste, quatrième année, à Yaoundé.
+        Résidant au Cameroun, donc à portée de chantier et non à portée de
+        rapport.
+      </p>
+      <p class="lede" style="font-size:18px">
+        Le moteur de preuve, ses six contre-mesures et ses 72 tests sont écrits
+        de sa main. La question du tirage d'inspecteur, qui doit être à la fois
+        imprévisible pour l'entreprise et reproductible pour l'auditeur, est un
+        problème de statisticien avant d'être un problème d'ingénieur.
+      </p>
+      <hr class="filet">
+      <p class="note">
+        Ce qui manque, et qui est cherché : un profil commercial ancré dans les
+        associations de ressortissants en Île-de-France, et un métreur
+        expérimenté à Douala.
+      </p>
+    </div>
+    <div class="pile" style="--ecart:16px;padding-top:10px">
+      <div class="carte">
+        <p class="kicker kicker--seul" style="margin-bottom:12px">Ce que la formation apporte ici</p>
+        <p class="note" style="margin:0">
+          Le score de conformité n'est pas une somme de pénalités. Un fraudeur qui
+          optimise une somme trouve le sous-ensemble le moins cher à truquer. Ce
+          qui compte est le nombre de sources de preuve indépendantes qui se
+          recoupent, et c'est une décision de statisticien.
+        </p>
+      </div>
+      <div class="carte carte--vert">
+        <p class="note" style="margin:0;color:var(--encre-douce)">
+          Un test a d'ailleurs corrigé ce modèle en cours de route : la première
+          version comptait position, heure et unicité comme trois sources
+          indépendantes, alors que ce sont trois contrôles sur un seul fichier.
+          Une photo irréprochable suffisait donc à certifier un jalon. Elle ne
+          suffit plus.
+        </p>
+      </div>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">15</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 16 · la demande ══ -->
+<section class="diapo diapo--nuit">
+  <p class="kicker">Ce que nous demandons</p>
+  <h2 style="font-size:48px;margin-top:6px;max-width:24ch">Le prix d'un premier chantier prouvé.</h2>
+
+  <div class="trois" style="margin-top:40px;gap:24px">
+    <div class="carte">
+      <span class="chiffre chiffre--petit" style="color:var(--foret-clair)">01</span>
+      <p class="note" style="color:rgba(246,243,236,.82);margin-top:16px">
+        Deux chantiers pilotes documentés de bout en bout, du premier jalon au
+        certificat final. C'est ce qui transforme un prototype en dossier.
+      </p>
+    </div>
+    <div class="carte">
+      <span class="chiffre chiffre--petit" style="color:var(--foret-clair)">02</span>
+      <p class="note" style="color:rgba(246,243,236,.82);margin-top:16px">
+        L'accès au réseau du club pour signer la lettre d'intention avec un
+        établissement de paiement agréé. C'est notre chemin critique, et il se
+        franchit par introduction, pas par formulaire.
+      </p>
+    </div>
+    <div class="carte">
+      <span class="chiffre chiffre--petit" style="color:var(--foret-clair)">03</span>
+      <p class="note" style="color:rgba(246,243,236,.82);margin-top:16px">
+        Le premier inspecteur indépendant du Littoral, rémunéré à la visite. Sans
+        lui, le faisceau de preuves perd sa source la plus difficile à corrompre.
+      </p>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:38px;max-width:78ch;font-size:19px">
+    La semaine de coaching nous est plus utile que la dotation. Ce que nous ne
+    savons pas faire seuls, c'est ouvrir la porte d'un établissement de paiement
+    agréé.
+  </p>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">16</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 17 · annexe cadre ══ -->
+<section class="diapo diapo--creux">
+  <p class="kicker">Annexe · qui détient l'argent</p>
+  <h2 style="font-size:42px;margin-top:2px">Nodjal ne détient jamais vos fonds,<br>et ne prétend pas être un séquestre.</h2>
+
+  <div class="deux" style="margin-top:30px;gap:46px">
+    <div class="pile" style="--ecart:18px">
+      <div class="carte">
+        <p class="kicker kicker--seul" style="margin-bottom:12px">Aujourd'hui, palier 0</p>
+        <p class="note" style="margin:0">
+          Nodjal autorise et trace le versement, jalon par jalon. L'argent va
+          directement du donneur d'ordre à l'entreprise. Aucun fonds ne transite
+          par nous, et aucun agrément n'est requis pour cela.
+        </p>
+      </div>
+      <div class="carte carte--vert">
+        <p class="kicker kicker--seul" style="margin-bottom:12px">Palier 1, le chemin réel</p>
+        <p class="note" style="margin:0;color:var(--encre-douce)">
+          Les fonds seront cantonnés sur les comptes d'un établissement de
+          paiement agréé, et Nodjal agira comme agent de cet établissement, sous
+          sa responsabilité. Articles L.523-1 à L.523-6 du Code monétaire et
+          financier.
+        </p>
+      </div>
+    </div>
+    <div class="pile" style="--ecart:18px">
+      <div class="carte carte--terre">
+        <p class="kicker kicker--seul" style="margin-bottom:12px">Le délai, sans arrondi</p>
+        <p class="note" style="margin:0">
+          Deux mois est le délai dont dispose l'ACPR pour s'opposer à
+          l'enregistrement d'un agent, une fois le dossier complet déposé. Mais ce
+          dossier est déposé par l'établissement mandant, pas par nous. Le chemin
+          critique réel est de trouver et contracter ce mandant, ce qui demande
+          plusieurs mois de diligences.
+        </p>
+      </div>
+      <p class="note">
+        Le mot « séquestre » a un sens réservé en droit français. Nous ne
+        l'employons pas pour décrire ce que nous faisons. Nous disons que l'argent
+        est bloqué tant que la preuve n'est pas validée, ce qui est exact et se
+        comprend sans dictionnaire.
+      </p>
+    </div>
+  </div>
+  <p class="signe">Nodjal · ANE 2026</p><p class="folio">17</p>
+</section>
+
+<!-- ══════════════════════════════════════════════ 18 · dos ══ -->
+<section class="diapo diapo--nuit">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%;position:relative;z-index:2">
+    <p class="kicker kicker--seul">Nodjal</p>
+    <h2 style="font-size:60px;max-width:22ch;margin-top:10px">Rien n'est payé tant que rien n'est prouvé.</h2>
+    <p class="lede" style="margin-top:30px;font-size:20px;max-width:54ch">
+      Le site est en ligne, la console est jouable, et le vérificateur de
+      certificat fonctionne sans compte. Ouvrez-le pendant que nous parlons.
+    </p>
+    <p class="mono" style="margin-top:26px;font-size:22px;color:var(--foret-clair)">banibe-nodjal.hf.space</p>
+    <p class="source" style="margin-top:34px;color:rgba(246,243,236,.5)">
+      BANIBE Jean-Steeve · steevebanibe@gmail.com · Douala et Yaoundé, Cameroun<br>
+      Dossier déposé au concours African Next Entrepreneurs 2026, catégorie Afrique.
+    </p>
+  </div>
+  <div class="bande-photo">
+    <img src="/shared/photos/fondation-1280.jpg" alt="Chantier au Cameroun">
+  </div>
+  <p class="credit-photo">Photographie d'illustration, Sid Mbog, Wikimedia Commons, CC BY-SA 4.0. Ce chantier n'est pas un chantier Nodjal.</p>
+</section>
+
+</body>
+</html>
