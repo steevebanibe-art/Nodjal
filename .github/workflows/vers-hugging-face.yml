@@ -74,7 +74,9 @@ jobs:
 
           # On vide l'index puis on le remplit : sans cela les fichiers deja
           # indexes ne repassent pas par le filtre de nettoyage de LFS.
-          git rm -r --cached . -q
+          # -f leve le garde-fou de git : --cached ne touche que l index,
+          # jamais les fichiers du disque.
+          git rm -r --cached . -q -f
           git add -A
 
           git -c user.name="Nodjal" -c user.email="ci@nodjal.invalid" \
