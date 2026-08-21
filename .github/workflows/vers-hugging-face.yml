@@ -1,0 +1,60 @@
+# Synchronisation GitHub vers Hugging Face Spaces.
+#
+# A chaque poussee sur main, le depot part vers le Space, qui reconstruit son
+# image et redemarre tout seul. Plus rien a faire a la main.
+#
+# Deux reglages a poser une seule fois, dans les parametres du depot GitHub,
+# rubrique Settings puis Secrets and variables puis Actions :
+#
+#   * un SECRET nomme HF_TOKEN : un jeton d'ecriture cree sur
+#     huggingface.co/settings/tokens, de type « Write ».
+#   * une VARIABLE nommee HF_SPACE : le chemin du Space, par exemple
+#     nodjal/site, tel qu'il apparait dans son adresse.
+#
+# La poussee est forcee parce que le Space demarre avec son propre commit
+# initial : les deux histoires n'ont pas d'ancetre commun, et c'est le depot
+# GitHub qui fait autorite.
+
+name: Vers Hugging Face
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Une seule synchronisation a la fois : deux poussees rapprochees ne doivent
+# pas se marcher dessus sur le Space.
+concurrency:
+  group: sync-hugging-face
+  cancel-in-progress: false
+
+jobs:
+  synchroniser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verifier que les reglages sont poses
+        env:
+          HF_SPACE: ${{ vars.HF_SPACE }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_SPACE" ]; then
+            echo "La variable HF_SPACE est vide. Posez-la dans Settings, Secrets and variables, Actions, onglet Variables."
+            exit 1
+          fi
+          if [ -z "$HF_TOKEN" ]; then
+            echo "Le secret HF_TOKEN est vide. Posez-le dans Settings, Secrets and variables, Actions, onglet Secrets."
+            exit 1
+          fi
+          echo "Cible : $HF_SPACE"
+
+      - name: Pousser vers le Space
+        env:
+          HF_SPACE: ${{ vars.HF_SPACE }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push --force "https://nodjal:$HF_TOKEN@huggingface.co/spaces/$HF_SPACE" HEAD:main
