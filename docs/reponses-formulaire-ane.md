@@ -101,27 +101,28 @@ n'est pas un ajout, c'est une conséquence.
 
 ---
 
-## Pourquoi souhaitez-vous participer à ce programme ?
+## Pourquoi souhaitez-vous participer ? · limite 1000 caractères
 
-Aucune limite annoncée. Si le formulaire en impose une, dis-le-moi et je taille.
+**962 caractères, marge 38.**
 
 ```
-Parce que ce que nous construisons n'existe que si la diaspora y croit, et que l'African Business Club est, depuis vingt ans, l'endroit où cette confiance se fabrique.
+Votre étude African Talents Repat le dit mieux que nous : 81 % de la diaspora envisage un retour sous cinq ans, mais 67 % n'ont rien entrepris. Cette inertie vient selon nous de l'absence d'une infrastructure de redevabilité : on ne s'engage pas à distance sur ce qu'on ne peut pas vérifier. C'est ce que nous construisons, et cela n'existera que si la diaspora y croit.
 
-Votre étude African Talents Repat le dit mieux que nous : 81 % de la diaspora envisage un retour sous cinq ans, l'appétence moyenne est de 8,3 sur 10, et 15 % veulent créer une entreprise sur le continent. Mais 67 % n'ont encore rien entrepris. Nous pensons qu'une partie de cette inertie n'est pas un manque d'envie, c'est l'absence d'une infrastructure de redevabilité. On ne s'engage pas à distance sur ce qu'on ne peut pas vérifier.
+Votre réseau financier d'abord. Notre chemin critique n'est pas technique : il faut qu'un établissement de paiement agréé accepte de cantonner les fonds pendant que Nodjal agit comme son agent. Cette porte s'ouvre par introduction, et c'est ce que nous ne savons pas faire seuls.
 
-Nous venons chercher trois choses précises.
+Des mentors qui connaissent ces corridors ensuite : nous avons construit le produit avant d'avoir rencontré assez de donneurs d'ordre. Le coaching nous est plus utile que la dotation.
 
-D'abord l'accès à votre réseau financier. Notre chemin critique n'est ni technique ni commercial : il consiste à faire signer une lettre d'intention à un établissement de paiement agréé qui acceptera de cantonner les fonds pendant que Nodjal agit comme son agent. Ce type de porte s'ouvre par introduction, pas par formulaire. C'est ce que nous ne savons pas faire seuls.
-
-Ensuite la confrontation de notre modèle à des mentors qui connaissent ces corridors. Nous avons construit le produit avant d'avoir rencontré assez de donneurs d'ordre. La semaine de coaching nous est, très concrètement, plus utile que la dotation.
-
-Enfin la crédibilité que donne le label ANE auprès des communautés que nous devons convaincre en premier. Un produit qui demande à des gens de confier leur épargne doit d'abord être adoubé par ceux en qui ils ont déjà confiance.
-
-Il y a aussi un calendrier. Les 18 et 19 septembre, le forum Ensemble Back Home réunit à Paris la diaspora camerounaise et l'ambassade autour d'un objectif explicite : transformer l'épargne diaspora en investissements structurants, à commencer par le logement. Or l'histoire des diaspora bonds africains est celle d'échecs répétés, souscription quasi nulle en Éthiopie en 2008, un quart de la cible au Kenya en 2011, et la Banque africaine de développement en attribue la cause à un déficit de transparence et de redevabilité. C'est exactement le problème que nous outillons.
+Le label enfin : un produit qui demande de confier son épargne doit être adoubé par ceux en qui les gens ont déjà confiance.
 ```
 
----
+Ouvrir en citant leur propre étude est l'arme la plus sous-estimée du concours :
+peu de candidats la liront, et un jury apprécie qu'on lui montre qu'on a compris
+sa thèse. Le reste tient en trois demandes, dont la première est la vraie : ce
+que tu ne sais pas faire seul.
+
+Ce qui a été coupé pour tenir dans mille caractères : le forum Ensemble Back
+Home des 18 et 19 septembre, et l'histoire des diaspora bonds. Garde-les pour
+l'oral, ce sont deux bons arguments de conversation.
 
 ## Les champs à choix
 
