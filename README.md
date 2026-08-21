@@ -1,3 +1,14 @@
+---
+title: Nodjal
+emoji: "🧾"
+colorFrom: green
+colorTo: gray
+sdk: docker
+app_port: 7860
+pinned: false
+short_description: Rien n'est paye tant que rien n'est prouve.
+---
+
 # Nodjal
 
 ### *Rien n'est payé tant que rien n'est prouvé.*

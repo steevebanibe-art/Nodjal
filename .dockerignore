@@ -1,0 +1,13 @@
+.git
+.gitignore
+node_modules
+
+# Le magasin est regenere au demarrage : embarquer une copie locale ferait
+# partir en ligne des scenarios d'attaque joues sur cette machine.
+data
+
+# Rien de tout cela ne sert au serveur.
+mobile
+supabase
+tests
+render.yaml
