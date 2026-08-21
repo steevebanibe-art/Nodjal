@@ -52,6 +52,19 @@ jobs:
           fi
           echo "Cible : $HF_SPACE"
 
+      # Hugging Face refuse les fichiers binaires en git ordinaire et reclame
+      # Git LFS. La conversion se fait ICI, dans la copie de travail du
+      # coureur, et pas dans le depot GitHub : Render clone le depot tel quel
+      # et n'a donc jamais a savoir ce qu'est un pointeur LFS.
+      - name: Convertir les binaires en LFS pour le Space
+        run: |
+          git lfs install --local
+          git lfs track "*.jpg" "*.jpeg" "*.png" "*.woff2"
+          git add .gitattributes
+          git add --renormalize .
+          git -c user.name="Nodjal" -c user.email="ci@nodjal.invalid" commit -q -m "Suivi LFS des binaires, pour le Space uniquement" || echo "aucun binaire a convertir"
+          git lfs ls-files | head -20
+
       - name: Pousser vers le Space
         env:
           HF_SPACE: ${{ vars.HF_SPACE }}
